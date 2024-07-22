@@ -1,0 +1,17 @@
+## Modules and libraries 
+node_modules/
+project-docs/
+dist/
+
+## Build files
+pnpm-lock.json
+
+## Environment
+.env
+.env.example
+
+## Linter / Formatter
+biome.json
+.eslintrc.json
+
+esbuild.js

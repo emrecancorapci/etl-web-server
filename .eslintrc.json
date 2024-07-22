@@ -1,0 +1,30 @@
+{
+  "env": {
+    "node": true,
+    "es2024": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["./tsconfig.json"],
+    "tsconfigRootDir": "./"
+  },
+  "plugins": [
+    "promise", // NOT ready for flat config yet: https://github.com/eslint-community/eslint-plugin-promise/issues/449
+    "simple-import-sort" // Ready for flat config
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:n/recommended",
+    "plugin:promise/recommended",
+    "plugin:security/recommended-legacy"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "n/no-missing-import": "off",
+    "promise/always-return": "warn",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
+  }
+}
