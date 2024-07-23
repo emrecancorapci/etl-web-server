@@ -1,5 +1,7 @@
 import * as crypto from 'node:crypto';
 
+import { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
+
 let destinationToken: string | undefined = '';
 let sourceToken: string | undefined = '';
 let refreshToken: string | undefined = '';
@@ -53,7 +55,7 @@ export async function getSourceToken(): Promise<string> {
   return sourceToken;
 }
 
-async function destinationTokenReceiver(): Promise<TargetTokenResponse> {
+async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   const { TARGET_API_URI, TARGET_USERNAME, TARGET_PASSWORD } = process.env;
 
   if (!TARGET_API_URI || !TARGET_USERNAME || !TARGET_PASSWORD)
@@ -66,7 +68,7 @@ async function destinationTokenReceiver(): Promise<TargetTokenResponse> {
 
   const password = crypto.createHash('md5').update(not_enough_crypted_password).digest('hex');
 
-  const body: TargetTokenRequest = {
+  const body: DestinationTokenRequest = {
     username: TARGET_USERNAME,
     password,
   };
@@ -84,7 +86,7 @@ async function destinationTokenReceiver(): Promise<TargetTokenResponse> {
   if (!response.ok) {
     throw new Error('Response is not OK.');
   }
-  const data: TargetTokenResponse = await response.json();
+  const data: DestinationTokenResponse = await response.json();
 
   if (!data.result) {
     console.error(data);
@@ -97,20 +99,6 @@ async function destinationTokenReceiver(): Promise<TargetTokenResponse> {
   }
 
   return data;
-}
-
-interface TargetTokenResponse {
-  result: boolean;
-  message: string;
-  objects: {
-    TicketId: string;
-    DeviceId: string;
-  };
-}
-
-interface TargetTokenRequest {
-  username: string;
-  password: string;
 }
 
 /**
@@ -142,24 +130,4 @@ async function sourceTokenReceiver(): Promise<SourceTokenResponse> {
   }
 
   return (await response.json()) as SourceTokenResponse;
-}
-
-/**
- * Represents the response object returned by the source token API.
- */
-interface SourceTokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  refresh_token: string;
-}
-
-/**
- * Represents a request for a source token.
- */
-interface SourceTokenRequest {
-  grant_type: 'client_credentials' | 'refresh_token';
-  client_id?: string;
-  client_secret?: string;
-  refresh_token?: string;
 }

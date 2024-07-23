@@ -11,6 +11,7 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
+    "ignore": ["node_modules", "dist", "build", "astro"],
     "enabled": true,
     "rules": {
       "recommended": false,
