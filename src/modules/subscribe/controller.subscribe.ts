@@ -1,12 +1,33 @@
 import { Request, Response } from 'express';
 
-import { getToken } from '@/helpers/get-token.ts';
+import { addIdPair } from '@/handlers/machine-handler.ts';
+import { sourceFetch } from '@/helpers/fetch.ts';
 
-export async function post(_: Request, response: Response) {
-  const token = await getToken();
+interface PostRequestBody {
+  sourceId: string;
+  destinationId: string;
+}
+
+interface ResponseBody {
+  message: string;
+  data?: unknown;
+  error?: unknown;
+}
+
+export async function post(
+  request: Request<void, ResponseBody, PostRequestBody>,
+  response: Response<ResponseBody>
+) {
+  const { sourceId, destinationId } = request.body;
 
   const subscriptionRequest = {
-    description: 'Main Subscription',
+    description: `${sourceId} Subscription`,
+    entites: [
+      {
+        id: sourceId,
+        type: 'info',
+      },
+    ],
     notification: {
       httpCustom: {
         url: `${process.env.SERVER_URL}/api/notify`,
@@ -31,20 +52,14 @@ export async function post(_: Request, response: Response) {
     throttling: 8 * 60,
   };
 
-  const serverAnswer = await fetch(`${process.env.SOURCE_API_URI}/orion/v2/subscriptions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(subscriptionRequest),
-  });
+  const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subscriptionRequest);
 
   const answerJson = await serverAnswer.json();
 
   console.log('Subscription response:', answerJson);
 
   if (serverAnswer.ok) {
+    addIdPair(sourceId, destinationId);
     response.status(201).send({ message: 'Subscription created successfully', data: answerJson });
   } else {
     response
