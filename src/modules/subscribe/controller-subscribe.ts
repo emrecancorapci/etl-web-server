@@ -32,11 +32,13 @@ export async function post(
 
   const subscriptionRequest = {
     description: `${sourceId} Subscription`,
-    entites: [
-      {
-        id: sourceId,
-      },
-    ],
+    subcject: {
+      entites: [
+        {
+          id: sourceId,
+        },
+      ],
+    },
     notification: {
       httpCustom: {
         url: `${request.protocol}://${request.get('host')}/api/notify`,
