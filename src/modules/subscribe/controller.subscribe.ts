@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { addIdPair } from '@/handlers/machine-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
+import { RequestParams } from '@/types.ts';
 
 interface PostRequestBody {
   sourceId: string;
@@ -15,7 +16,7 @@ interface ResponseBody {
 }
 
 export async function post(
-  request: Request<void, ResponseBody, PostRequestBody>,
+  request: Request<RequestParams, ResponseBody, PostRequestBody>,
   response: Response<ResponseBody>
 ) {
   const { sourceId, destinationId } = request.body;

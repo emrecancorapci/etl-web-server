@@ -1,5 +1,6 @@
+//
 // Source
-
+//
 export interface Notification {
   id: string;
   type: string;
@@ -35,9 +36,9 @@ export interface SourceTokenRequest {
   refresh_token?: string;
 }
 
-
+//
 // Destination
-
+//
 export interface DestinationBody {
   Stationid: string;
   Readtime: string; // 2019-12-19T10:00:00
@@ -77,4 +78,13 @@ export interface DestinationTokenResponse {
 export interface DestinationTokenRequest {
   username: string;
   password: string;
+}
+
+
+//
+// Application
+//
+
+export interface RequestParams {
+  [key: string]: string;
 }
