@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { getTargetId } from '@/handlers/machine-handler.ts';
 import { dataFormatter } from '@/helpers/data-formatter.ts';
 import { fetchDestination } from '@/helpers/fetch.ts';
+import { InternalServerError } from '@/middlewares/error/base.ts';
 import { Notification, RequestParams } from '@/types.ts';
 
 export async function post(request: Request<RequestParams, void, Notification>, response: Response) {
@@ -29,8 +30,7 @@ export async function post(request: Request<RequestParams, void, Notification>, 
   const targetId = getTargetId(id);
 
   if (!targetId) {
-    console.log('No target found for this notification');
-    return;
+    throw new InternalServerError('No target found for this notification');
   }
 
   console.log(`Notification forwarded to ${targetId}`);
@@ -40,14 +40,16 @@ export async function post(request: Request<RequestParams, void, Notification>, 
   const serverResponse = await fetchDestination()
     .post('/AQI/SendData', formatted)
     .catch((err) => {
-      throw new Error(err.message);
+      throw new InternalServerError(err.message);
     });
 
   if (!serverResponse.ok) {
-    throw new Error();
+    console.error('Destination response:', await serverResponse.json());
+    throw new InternalServerError('Error while forwarding the notification');
   }
 
   console.log('Notification forwarded to the destination');
+  console.log('Destination response:', await serverResponse.json());
 
   response.status(200).send({ message: 'Notification received' });
 }

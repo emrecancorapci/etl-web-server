@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { addIdPair } from '@/handlers/machine-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
+import { InternalServerError } from '@/middlewares/error/base.ts';
 import { RequestParams } from '@/types.ts';
 
 interface PostRequestBody {
@@ -54,6 +55,12 @@ export async function post(
   };
 
   const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subscriptionRequest);
+
+  if (!serverAnswer.ok) {
+    const error = await serverAnswer.json();
+
+    throw new InternalServerError(error.description);
+  }
 
   const answerJson = await serverAnswer.json();
 
