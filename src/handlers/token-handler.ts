@@ -1,7 +1,12 @@
 import * as crypto from 'node:crypto';
 
 import { InternalServerError } from '@/middlewares/error/base.ts';
-import type { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
+import type {
+  DestinationTokenRequest,
+  DestinationTokenResponse,
+  SourceTokenRequest,
+  SourceTokenResponse,
+} from '@/types.ts';
 
 let destinationToken: string | undefined = '';
 let sourceToken: string | undefined = '';
@@ -83,19 +88,27 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   const { TARGET_API_URI, TARGET_USERNAME, TARGET_PASSWORD } = process.env;
 
   if (!TARGET_API_URI || !TARGET_USERNAME || !TARGET_PASSWORD)
-    throw new InternalServerError('Missing TARGET environment variables. Please check your .env file.');
+    throw new InternalServerError(
+      'Missing TARGET environment variables. Please check your .env file.'
+    );
 
   const not_enough_crypted_password = crypto
     .createHash('md5')
     .update(TARGET_PASSWORD)
     .digest('hex');
 
+  console.log('hashed once');
+
   const password = crypto.createHash('md5').update(not_enough_crypted_password).digest('hex');
+
+  console.log('hashed twice');
 
   const body: DestinationTokenRequest = {
     username: TARGET_USERNAME,
     password,
   };
+
+  console.log('created body');
 
   const response = await fetch(`${TARGET_API_URI}/Security/login`, {
     method: 'POST',
@@ -103,15 +116,22 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
-  }).catch((err) => {
-    console.error(err);
-    throw new InternalServerError(err.message);
-  });
+  })
+    .then((res) => {
+      console.log('response:', res);
 
-  if (!response.ok) {
-    throw new InternalServerError('Response is not OK.');
-  }
-  const data = await response.json() as DestinationTokenResponse;
+      if (!res.ok) {
+        throw new InternalServerError('Response is not OK.');
+      }
+
+      return res;
+    })
+    .catch((err) => {
+      console.error(err);
+      throw new InternalServerError(err.message);
+    });
+
+  const data = (await response.json()) as DestinationTokenResponse;
 
   if (!data.result) {
     console.error(data);
