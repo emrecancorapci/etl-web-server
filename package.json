@@ -8,8 +8,9 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "start": "tsx src/server.ts",
-    "dev": "tsx watch src/server.ts"
+    "start": "node esbuild.js & node dist/server.cjs",
+    "build": "node esbuild.js",
+    "dev": "tsx src/server.ts"
   },
   "dependencies": {
     "argon2": "^0.40.3",
@@ -35,6 +36,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.7",
     "@typescript-eslint/parser": "^7.14.1",
+    "esbuild": "^0.23.0",
     "eslint": "8.57.0",
     "eslint-plugin-n": "^17.9.0",
     "eslint-plugin-promise": "^6.2.0",
