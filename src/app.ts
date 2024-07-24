@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import express from 'express';
+import express, { type Application } from 'express';
 import rateLimiter from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -20,7 +20,7 @@ const RATE_LIMITER_CONFIG = {
   windowMs: 15 * 60 * 1000, // 15 minutes
 };
 
-const app = express();
+const app: Application = express();
 
 app.disable('x-powered-by');
 app.use(rateLimiter(RATE_LIMITER_CONFIG));

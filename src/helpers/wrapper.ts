@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
 export function w(
   fn: (request: Request, response: Response, next: NextFunction) => Promise<Response | void>

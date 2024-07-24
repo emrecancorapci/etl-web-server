@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { addIdPair } from '@/handlers/machine-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
 import { InternalServerError } from '@/middlewares/error/base.ts';
-import { RequestParams } from '@/types.ts';
+import type { RequestParams } from '@/types.ts';
 
 interface PostRequestBody {
   sourceId: string;
@@ -60,8 +60,10 @@ export async function post(
 
   if (!serverAnswer.ok) {
     const error = await serverAnswer.json();
+    
+    console.error('Subscription error:', error);
 
-    throw new InternalServerError(error.description);
+    throw new InternalServerError();
   }
 
   const answerJson = await serverAnswer.json();

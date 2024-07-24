@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { notifyRouter } from './modules/notify/routes.notify';
-import { subscribeRouter } from './modules/subscribe/routes.subscribe';
+import { notifyRouter } from './modules/notify/routes-notify.ts';
+import { subscribeRouter } from './modules/subscribe/routes-subscribe.ts';
 
-const router = Router();
+const router: Router = Router();
 
 router.use('/notify', notifyRouter);
 router.use('/subscribe', subscribeRouter);

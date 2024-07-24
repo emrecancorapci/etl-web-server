@@ -8,8 +8,8 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "start": "tsc & node src/server.js",
-    "dev": "tsx src/server.ts"
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts"
   },
   "dependencies": {
     "argon2": "^0.40.3",

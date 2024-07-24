@@ -1,6 +1,6 @@
 import * as crypto from 'node:crypto';
 
-import { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
+import type { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
 
 let destinationToken: string | undefined = '';
 let sourceToken: string | undefined = '';

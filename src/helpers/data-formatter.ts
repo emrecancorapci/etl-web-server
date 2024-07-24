@@ -1,4 +1,4 @@
-import { DestinationBody, Notification } from "@/types.ts";
+import type { DestinationBody, Notification } from "@/types.ts";
 
 export function dataFormatter(data: Notification, targetId: string): DestinationBody {
   const formatted = {

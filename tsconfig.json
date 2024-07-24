@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "module": "NodeNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "rootDir": "./src",
+    "lib": ["ESNext"],
     "skipLibCheck": true,
+    "useDefineForClassFields": true,
 
     /* Bundler mode */
     "moduleResolution": "NodeNext",
@@ -17,10 +18,12 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
