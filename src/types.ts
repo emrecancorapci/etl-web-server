@@ -41,6 +41,29 @@ export interface SourceErrorResponse {
   description: string;
 }
 
+export interface SubscriptionRequest {
+  description?: string;
+  subject: {
+    entities: {
+      id: string;
+      type: string;
+    }[];
+
+    conditions?: {
+      attrs: string[];
+    };
+  };
+  notification: {
+    httpCustom: {
+      url: string;
+      method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    };
+    attrs: string[];
+    attrsFormat: 'simplifiedKeyValues';
+  };
+  throttling: number;
+}
+
 //
 // Destination
 //
@@ -84,7 +107,6 @@ export interface DestinationTokenRequest {
   username: string;
   password: string;
 }
-
 
 //
 // Application

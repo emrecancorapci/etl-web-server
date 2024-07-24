@@ -55,6 +55,29 @@ export async function getSourceToken(): Promise<string> {
   return sourceToken;
 }
 
+export async function resetSourceToken(): Promise<string> {
+  const response = await sourceTokenReceiver();
+
+  sourceToken = response.access_token;
+  refreshToken = response.refresh_token;
+
+  return sourceToken;
+}
+
+export async function resetDestinationToken(): Promise<string> {
+  const response = await destinationTokenReceiver();
+
+  destinationToken = response.objects.TicketId;
+
+  return destinationToken;
+}
+
+/**
+ * Retrieves the destination token from the target API.
+ * @returns A Promise that resolves to a DestinationTokenResponse object.
+ * @throws An error if any of the required environment variables are missing,
+ * if the response is not OK, if the result is false, or if the token is null.
+ */
 async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   const { TARGET_API_URI, TARGET_USERNAME, TARGET_PASSWORD } = process.env;
 
@@ -86,7 +109,7 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   if (!response.ok) {
     throw new Error('Response is not OK.');
   }
-  const data: DestinationTokenResponse = await response.json();
+  const data = await response.json() as DestinationTokenResponse;
 
   if (!data.result) {
     console.error(data);

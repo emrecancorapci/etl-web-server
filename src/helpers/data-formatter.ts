@@ -1,7 +1,7 @@
 import type { DestinationBody, Notification } from "@/types.ts";
 
 export function dataFormatter(data: Notification, targetId: string): DestinationBody {
-  const formatted = {
+  return {
     Stationid: targetId,
     Readtime: new Date(Date.now()).toUTCString().slice(0, 19),
     SoftwareVersion: 'v1.0.0',
@@ -27,6 +27,4 @@ export function dataFormatter(data: Notification, targetId: string): Destination
     Sicaklik: data.temperature,
     Sicaklik_Status: 1,
   };
-
-  return formatted;
 }
