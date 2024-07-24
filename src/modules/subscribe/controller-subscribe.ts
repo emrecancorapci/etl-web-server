@@ -1,9 +1,10 @@
 import type { Request, Response } from 'express';
 
-import { addIdPair } from '@/handlers/machine-handler.ts';
-import { sourceFetch } from '@/helpers/fetch.ts';
-import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
-import type { RequestParams, SourceErrorResponse } from '@/types.ts';
+import { BadRequestError } from '@/middlewares/error/base.ts';
+import type { RequestParams } from '@/types.ts';
+
+import { createSubscription } from './utils/create-subscription.ts';
+import { generateSubscriptionRequest } from './utils/generate-subscription-request.ts';
 
 interface PostRequestBody {
   sourceId: string;
@@ -33,66 +34,11 @@ export async function post(
   const description = `${sourceId} Subscription`;
   const url = `${request.protocol}://${request.get('host')}/api/notify`;
 
-  const subscriptionRequest = {
-    description,
-    subject: {
-      entities: [
-        {
-          id: sourceId,
-          type: 'data',
-        },
-      ],
-      conditions: {
-        attrs: [
-          'relativeHumidity',
-          'NO2',
-          'PM10',
-          'PM2P5',
-          'pressure',
-          'CO',
-          'SO2',
-          'temperature',
-          'O3',
-          'PM1',
-        ],
-      },
-    },
-    notification: {
-      httpCustom: {
-        url,
-        method: 'POST',
-      },
-      attrs: [
-        'relativeHumidity',
-        'NO2',
-        'PM10',
-        'PM2P5',
-        'pressure',
-        'CO',
-        'SO2',
-        'temperature',
-        'O3',
-        'PM1',
-      ],
-      attrsFormat: 'simplifiedKeyValues',
-    },
-    throttling: 8 * 60,
-  };
+  const subscriptionRequest = generateSubscriptionRequest(description, sourceId, url);
 
   console.log('Subscription request:', subscriptionRequest);
 
-  const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subscriptionRequest);
+  await createSubscription(subscriptionRequest, sourceId, destinationId);
 
-  if (!serverAnswer.ok) {
-    const error = (await serverAnswer.json()) as SourceErrorResponse;
-
-    console.error('Subscription error:', error);
-
-    throw new InternalServerError(error.description);
-  }
-
-  console.log('Subscription created successfully');
-
-  addIdPair(sourceId, destinationId);
   response.status(201).send({ message: 'Subscription created successfully' });
 }
