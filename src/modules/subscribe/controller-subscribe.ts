@@ -30,8 +30,11 @@ export async function post(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
+  const description = `${sourceId} Subscription`;
+  const url = `${request.protocol}://${request.get('host')}/api/notify`;
+
   const subscriptionRequest = {
-    description: `${sourceId} Subscription`,
+    description,
     subject: {
       entities: [
         {
@@ -56,10 +59,9 @@ export async function post(
     },
     notification: {
       httpCustom: {
-        url: `${request.protocol}://${request.get('host')}/api/notify`,
+        url,
         method: 'POST',
       },
-      // Notification'da gelecek veriler
       attrs: [
         'relativeHumidity',
         'NO2',
@@ -74,7 +76,6 @@ export async function post(
       ],
       attrsFormat: 'simplifiedKeyValues',
     },
-    // Notification'lar arasındaki minimum süre (saniye)
     throttling: 8 * 60,
   };
 
@@ -90,16 +91,8 @@ export async function post(
     throw new InternalServerError(error.description);
   }
 
-  const answerJson = await serverAnswer.json();
+  console.log('Subscription created successfully');
 
-  console.log('Subscription response:', answerJson);
-
-  if (serverAnswer.ok) {
-    addIdPair(sourceId, destinationId);
-    response.status(201).send({ message: 'Subscription created successfully', data: answerJson });
-  } else {
-    response
-      .status(serverAnswer.status)
-      .json({ message: 'Subscription could not be created', error: answerJson });
-  }
+  addIdPair(sourceId, destinationId);
+  response.status(201).send({ message: 'Subscription created successfully' });
 }

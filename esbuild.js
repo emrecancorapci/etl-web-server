@@ -6,5 +6,6 @@ build({
   platform: 'node',
   target: 'node20',
   outfile: 'dist/server.cjs',
-  format: 'cjs'
+  format: 'cjs',
+  minify: true,
 });
