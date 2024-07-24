@@ -43,7 +43,12 @@ export async function post(
 
   console.log('Formatted notification:', formatted);
 
-  const serverResponse = await fetchDestination().post('/AQI/SendData', formatted);
+  const serverResponse = await fetchDestination()
+    .post('/AQI/SendData', formatted)
+    .catch((error) => {
+      console.error('Error while forwarding the notification:', error);
+      throw new InternalServerError('Error while forwarding the notification');
+    });
 
   console.log('Notification forwarded to the destination');
 
