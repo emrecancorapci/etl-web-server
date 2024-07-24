@@ -4,8 +4,8 @@ import { w } from '@/helpers/wrapper.ts';
 
 import { post } from './controller.notify.ts';
 
-const router = Router();
+const notifyRouter: Router = Router();
 
-router.post('/', w(post));
+notifyRouter.post('/', w(post));
 
-export { router };
+export { notifyRouter };

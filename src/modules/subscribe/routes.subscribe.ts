@@ -4,8 +4,8 @@ import { w } from '@/helpers/wrapper.ts';
 
 import { post } from './controller.subscribe.ts';
 
-const router = Router();
+const subscribeRouter: Router = Router();
 
-router.post('/', w(post));
+subscribeRouter.post('/', w(post));
 
-export { router };
+export { subscribeRouter };
