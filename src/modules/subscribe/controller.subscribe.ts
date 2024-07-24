@@ -32,7 +32,7 @@ export async function post(
     ],
     notification: {
       httpCustom: {
-        url: `${process.env.SERVER_URL}/api/notify`,
+        url: `${request.protocol}://${request.get('host')}/api/notify`,
         method: 'POST',
       },
       // Notification'da gelecek veriler
@@ -53,6 +53,8 @@ export async function post(
     // Notification'lar arasındaki minimum süre (saniye)
     throttling: 8 * 60,
   };
+
+  console.log('Subscription request:', subscriptionRequest);
 
   const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subscriptionRequest);
 
