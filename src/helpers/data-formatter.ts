@@ -3,7 +3,7 @@ import type { DestinationBody, Notification } from "@/types.ts";
 export function dataFormatter(data: Notification, targetId: string): DestinationBody {
   return {
     Stationid: targetId,
-    Readtime: new Date(Date.now()).toUTCString().slice(0, 19),
+    Readtime: new Date(Date.now()).toISOString(),
     SoftwareVersion: 'v1.0.0',
     Period: 8,
     PM10: data.PM10,

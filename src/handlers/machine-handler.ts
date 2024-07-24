@@ -1,7 +1,9 @@
+import { BadRequestError } from "@/middlewares/error/base.ts";
+
 const idPairs = new Map<string, string>();
 
 export function getAllIdPairs(): Map<string, string> {
-  return idPairs;
+  return {...idPairs};
 }
 
 export function getTargetId(sourceId: string): string | undefined {
@@ -14,7 +16,7 @@ export function getSourceId(targetId: string): string | undefined {
 
 export function addIdPair(sourceId: string, targetId: string): void {
   if (idPairs.has(sourceId)) {
-    throw new Error(`Id pair already exists for sourceId: ${sourceId}`);
+    throw new BadRequestError(`Id pair already exists for sourceId: ${sourceId}`);
   }
 
   idPairs.set(sourceId, targetId);
@@ -30,7 +32,7 @@ export function removePairBySourceId(sourceId: string): void {
   if (isPairDeleted) {
     return;
   } else {
-    throw new Error(`No pair found for sourceId: ${sourceId}`);
+    throw new BadRequestError(`No pair found for sourceId: ${sourceId}`);
   }
 }
 
@@ -40,6 +42,6 @@ export function removePairByTargetId(targetId: string): void {
   if (sourceId) {
     idPairs.delete(sourceId);
   } else {
-    throw new Error(`No source found for targetId: ${targetId}`);
+    throw new BadRequestError(`No source found for targetId: ${targetId}`);
   }
 }
