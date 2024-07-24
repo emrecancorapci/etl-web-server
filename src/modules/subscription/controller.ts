@@ -32,7 +32,7 @@ export async function post(
   }
 
   const description = `${sourceId} Subscription`;
-  const url = `${request.protocol}://${request.get('host')}/api/notify`;
+  const url = `${request.protocol}://${request.get('host')}/api/notification`;
 
   const subscriptionRequest = generateSubscriptionRequest(description, sourceId, url);
 
