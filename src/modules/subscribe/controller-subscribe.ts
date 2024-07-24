@@ -2,8 +2,8 @@ import type { Request, Response } from 'express';
 
 import { addIdPair } from '@/handlers/machine-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
-import { InternalServerError } from '@/middlewares/error/base.ts';
-import type { RequestParams } from '@/types.ts';
+import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
+import type { RequestParams, SourceErrorResponse } from '@/types.ts';
 
 interface PostRequestBody {
   sourceId: string;
@@ -22,12 +22,19 @@ export async function post(
 ) {
   const { sourceId, destinationId } = request.body;
 
+  if (!sourceId || !destinationId) {
+    throw new BadRequestError('SourceId and DestinationId are required.');
+  }
+
+  if (!(typeof sourceId === 'string') || !(typeof destinationId === 'string')) {
+    throw new BadRequestError('SourceId and DestinationId must be strings.');
+  }
+
   const subscriptionRequest = {
     description: `${sourceId} Subscription`,
     entites: [
       {
         id: sourceId,
-        type: 'info',
       },
     ],
     notification: {
@@ -59,11 +66,11 @@ export async function post(
   const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subscriptionRequest);
 
   if (!serverAnswer.ok) {
-    const error = await serverAnswer.json();
-    
+    const error = (await serverAnswer.json()) as SourceErrorResponse;
+
     console.error('Subscription error:', error);
 
-    throw new InternalServerError();
+    throw new InternalServerError(error.description);
   }
 
   const answerJson = await serverAnswer.json();

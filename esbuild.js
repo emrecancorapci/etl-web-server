@@ -4,7 +4,8 @@ build({
   entryPoints: ['src/server.ts'],
   bundle: true,
   platform: 'node',
-  target: 'node22',
+  target: 'node20',
   outfile: 'dist/server.cjs',
   format: 'cjs',
+  minify: true,
 });

@@ -36,6 +36,11 @@ export interface SourceTokenRequest {
   refresh_token?: string;
 }
 
+export interface SourceErrorResponse {
+  error: string;
+  description: string;
+}
+
 //
 // Destination
 //
