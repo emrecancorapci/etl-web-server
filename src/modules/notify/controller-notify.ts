@@ -30,6 +30,7 @@ export async function post(request: Request<RequestParams, void, Notification>, 
   const targetId = getTargetId(id);
 
   if (!targetId) {
+    console.log('No target found for this notification');
     throw new InternalServerError('No target found for this notification');
   }
 

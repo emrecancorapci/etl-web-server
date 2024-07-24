@@ -3,7 +3,7 @@ import compression from 'compression';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 import express, { type Application } from 'express';
-import rateLimiter from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
@@ -15,15 +15,18 @@ dotenv.config();
 
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 
-const RATE_LIMITER_CONFIG = {
-  max: 100, // Limits each IP to 100 request per windowMs
-  windowMs: 15 * 60 * 1000, // 15 minutes
-};
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 
 const app: Application = express();
 
 app.disable('x-powered-by');
-app.use(rateLimiter(RATE_LIMITER_CONFIG));
+app.use(limiter);
 app.use(helmet());
 app.use(cors());
 app.use(compression());

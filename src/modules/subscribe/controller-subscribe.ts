@@ -32,12 +32,27 @@ export async function post(
 
   const subscriptionRequest = {
     description: `${sourceId} Subscription`,
-    subcject: {
-      entites: [
+    subject: {
+      entities: [
         {
           id: sourceId,
+          type: 'data',
         },
       ],
+      conditions: {
+        attrs: [
+          'relativeHumidity',
+          'NO2',
+          'PM10',
+          'PM2P5',
+          'pressure',
+          'CO',
+          'SO2',
+          'temperature',
+          'O3',
+          'PM1',
+        ],
+      },
     },
     notification: {
       httpCustom: {
