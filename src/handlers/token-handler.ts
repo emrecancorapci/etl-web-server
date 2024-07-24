@@ -1,5 +1,6 @@
 import * as crypto from 'node:crypto';
 
+import { InternalServerError } from '@/middlewares/error/base.ts';
 import type { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
 
 let destinationToken: string | undefined = '';
@@ -82,7 +83,7 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   const { TARGET_API_URI, TARGET_USERNAME, TARGET_PASSWORD } = process.env;
 
   if (!TARGET_API_URI || !TARGET_USERNAME || !TARGET_PASSWORD)
-    throw new Error('Missing TARGET environment variables. Please check your .env file.');
+    throw new InternalServerError('Missing TARGET environment variables. Please check your .env file.');
 
   const not_enough_crypted_password = crypto
     .createHash('md5')
@@ -103,22 +104,23 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
     },
     body: JSON.stringify(body),
   }).catch((err) => {
-    throw new Error(err.message);
+    console.error(err);
+    throw new InternalServerError(err.message);
   });
 
   if (!response.ok) {
-    throw new Error('Response is not OK.');
+    throw new InternalServerError('Response is not OK.');
   }
   const data = await response.json() as DestinationTokenResponse;
 
   if (!data.result) {
     console.error(data);
-    throw new Error('Result is false.');
+    throw new InternalServerError('Result is false.');
   }
 
   if (data.objects === null) {
     console.error(data);
-    throw new Error('Token is null.');
+    throw new InternalServerError('Token is null.');
   }
 
   return data;

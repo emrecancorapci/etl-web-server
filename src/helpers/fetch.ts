@@ -20,8 +20,8 @@ export function fetchDestination() {
     return await fetch(`${TARGET_API_URI}${path}`, {
       method: 'POST',
       headers: {
-        AToken: `{"TicketId": "${ticketId}"}`,
         'Content-Type': 'application/json',
+        AToken: `{"TicketId": "${ticketId}"}`,
       },
       body: JSON.stringify(data),
     });
