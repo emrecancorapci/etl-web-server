@@ -1,8 +1,6 @@
 ## Modules and libraries 
 node_modules/
-project-docs/
 dist/
-astro/
 
 ## Build files
 pnpm-lock.json
@@ -15,4 +13,4 @@ pnpm-lock.json
 biome.json
 .eslintrc.json
 
-esbuild.js
+server/esbuild.js

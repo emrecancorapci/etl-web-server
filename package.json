@@ -8,9 +8,10 @@
     "node": "22.4.0"
   },
   "scripts": {
-    "start": "node esbuild.js & node dist/server.cjs",
-    "build": "node esbuild.js",
-    "dev": "tsx src/server.ts"
+    "start": "node server/esbuild.js & node dist/server.cjs",
+    "start:pm2": "node server/esbuild.js & pm2 start dist/server.cjs",
+    "build": "node server/esbuild.js",
+    "dev": "tsx server/src/main.ts"
   },
   "dependencies": {
     "argon2": "^0.40.3",
@@ -19,7 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-rate-limit": "^7.3.1",
+    "express-rate-limit": "^7.4.0",
     "helmet": "^7.1.0",
     "http-status": "^1.7.4",
     "http-status-codes": "^2.3.0",
