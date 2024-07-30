@@ -58,5 +58,16 @@ export function sourceFetch() {
     });
   }
 
-  return { get, post };
+  async function del(path: string) : Promise<Response> {
+    const token = await getSourceToken();
+
+    return await fetch(`${SOURCE_API_URI}${path}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  return { get, post, del };
 }
