@@ -1,0 +1,112 @@
+---
+import { CalculatorIcon, HomeIcon, PodcastIcon } from 'lucide-react';
+import '@/styles/globals.css';
+import NavButton from '@/components/ui/nav-button.astro';
+
+interface Props {
+  title: string;
+  description?: string | undefined;
+  page: string;
+}
+
+const { title, description, page }: Props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description ?? 'ETL Application'} />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<div class="col-span-2 hidden border-r bg-primary-foreground md:block">
+			<div class="flex h-full max-h-screen flex-col gap-2">
+				<div class="flex h-16 items-center border-b px-6">
+					<a href="/" class="flex items-center gap-2 text-xl font-semibold">
+						Tetra - Bettair ETL
+					</a>
+				</div>
+				<div class="flex-1">
+					<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
+						<NavButton active={page === 'home'} href="/" >
+							<HomeIcon className="h-4 w-4" />
+							Panel
+						</NavButton>
+						<NavButton active={page === 'subscriptions'} href="/subscriptions" >
+							<PodcastIcon className="h-4 w-4" />
+							Abonelikler
+						</NavButton>
+						<NavButton active={page === 'machines'} href="/machines" >
+							<CalculatorIcon className="h-4 w-4" />
+							Makineler
+						</NavButton>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex justify-center items-center gap-2 flex-col bg-primary-foreground max-h-24 md:hidden p-2">
+			<a href="/" class="items-center gap-2 text-xl font-semibold">
+				Tetra - Bettair ETL
+			</a>
+			<nav class="grid grid-cols-3 items-start px-2 text-sm font-medium w-full *:justify-center">
+				<NavButton active={page === 'home'} href="/" >
+					<HomeIcon className="h-4 w-4" />
+					Panel
+				</NavButton>
+				<NavButton active={page === 'subscriptions'} href="/subscriptions" >
+					<PodcastIcon className="h-4 w-4" />
+					Abonelikler
+				</NavButton>
+				<NavButton active={page === 'machines'} href="/machines" >
+					<CalculatorIcon className="h-4 w-4" />
+					Makineler
+				</NavButton>
+			</nav>
+		</div>
+
+		<div class="sm:col-span-1 md:col-span-2 lg:col-span-4 xl:col-span-6 p-4">
+			<slot />
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	body {
+		margin: 0;
+		padding: 0;
+		min-height: 100dvh;
+		min-width: 100dvw;
+		display: grid;
+		background-color: black;
+		column-gap: 16px;
+		justify-content: space-between;
+	}
+
+	@media (min-width: 480px) {
+  body {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+	@media (min-width: 768px) {
+  body {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+	@media (min-width: 1024px) {
+  body {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
+	@media (min-width: 1280px) {
+  body {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+</style>

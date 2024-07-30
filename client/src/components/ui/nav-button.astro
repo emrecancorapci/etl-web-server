@@ -1,0 +1,15 @@
+---
+interface Props {
+  active: boolean;
+  href: string;
+}
+
+const { active, href }: Props = Astro.props;
+---
+
+<a
+  href={href}
+  class={`flex items-center gap-3 rounded-lg px-3 py-2 ${active? 'bg-muted text-primary' : 'text-muted-foreground' } transition-all hover:text-primary`}
+  >
+  <slot />
+</a>
