@@ -14,3 +14,8 @@ biome.json
 .eslintrc.json
 
 server/esbuild.js
+
+## Client
+client/
+public/
+astro.config.mjs

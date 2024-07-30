@@ -116,5 +116,10 @@
       "attributePosition": "auto"
     },
     "globals": ["require", "__dirname", "__filename", "module", "exports"]
+  },
+  "json": {
+    "formatter": {
+      "enabled": false
+    }
   }
 }

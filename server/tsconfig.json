@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "rootDir": "./server/src",
+    "rootDir": "./src",
     "baseUrl": "./",
     "lib": ["ESNext"],
     "skipLibCheck": true,
@@ -23,9 +23,8 @@
     "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./server/src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["server/src/**/*.ts"],
-  "exclude": ["./server/esbuild.js"]
+  "include": ["src/**/*.ts"]
 }
