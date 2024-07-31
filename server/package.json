@@ -8,10 +8,10 @@
     "node": "22.4.0"
   },
   "scripts": {
-    "start": "node server/esbuild.js & node dist/server.cjs",
-    "start:pm2": "node server/esbuild.js & pm2 start dist/server.cjs",
-    "build": "node server/esbuild.js",
-    "dev": "tsx server/src/main.ts"
+    "start": "node esbuild.js & node ../dist/server.cjs",
+    "start:pm2": "node esbuild.js & pm2 start ../dist/server.cjs",
+    "build": "node esbuild.js",
+    "dev": "tsx src/main.ts"
   },
   "dependencies": {
     "argon2": "^0.40.3",
