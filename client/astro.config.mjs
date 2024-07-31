@@ -13,5 +13,5 @@ export default defineConfig({
   output: 'static',
   srcDir: 'src',
   publicDir: 'public',
-  outDir: '../public',
+  outDir: '../server/public',
 });

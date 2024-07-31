@@ -22,10 +22,10 @@ const { title, description, page }: Props = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<div class="col-span-2 hidden border-r bg-primary-foreground md:block">
+		<div class="dark col-span-2 hidden border-r bg-primary-foreground md:block">
 			<div class="flex h-full max-h-screen flex-col gap-2">
 				<div class="flex h-16 items-center border-b px-6">
-					<a href="/" class="flex items-center gap-2 text-xl font-semibold">
+					<a href="/" class="flex text-primary items-center gap-2 text-xl font-semibold">
 						Tetra - Bettair ETL
 					</a>
 				</div>
@@ -68,7 +68,7 @@ const { title, description, page }: Props = Astro.props;
 			</nav>
 		</div>
 
-		<div class="sm:col-span-1 md:col-span-2 lg:col-span-4 xl:col-span-6 p-4">
+		<div class="md:col-span-4 lg:col-span-6 xl:col-span-8 p-4">
 			<slot />
 		</div>
 	</body>
@@ -85,12 +85,6 @@ const { title, description, page }: Props = Astro.props;
 		column-gap: 16px;
 		justify-content: space-between;
 	}
-
-	@media (min-width: 480px) {
-  body {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-}
 
 	@media (min-width: 768px) {
   body {

@@ -36,6 +36,8 @@ app.use(morgan(NODE_ENV));
 
 app.use('/api', router);
 
+app.use(express.static('public'));
+
 app.use(notFound);
 app.use(errorHandler);
 
