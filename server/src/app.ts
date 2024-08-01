@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
@@ -12,6 +10,7 @@ import morgan from 'morgan';
 import { getDirname } from './helpers/get-dir.ts';
 import errorHandler from './middlewares/error/error-handler.ts';
 import notFound from './middlewares/not-found.ts';
+import { staticFileServer } from './middlewares/static-server.ts';
 import { router } from './routes.ts';
 
 dotenv.config();
@@ -41,17 +40,7 @@ app.use(morgan(NODE_ENV));
 
 app.use('/api', router);
 
-app.use((req, res, next) => {
-  if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
-    next();
-  } else {
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    res.sendFile(path.join(getDirname(), 'public', 'index.html'));
-  }
-});
-
+app.use(staticFileServer);
 app.use(express.static('public'));
 
 app.use(notFound);
