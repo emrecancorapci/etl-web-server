@@ -11,8 +11,7 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
-    "include": ["*.svelte", "*.astro", "*.vue"],
-    "ignore": ["node_modules"],
+    "ignore": ["node_modules", "dist", "build"],
     "enabled": true,
     "rules": {
       "recommended": false,
@@ -116,22 +115,11 @@
       "quoteStyle": "single",
       "attributePosition": "auto"
     },
-    "globals": ["require", "__dirname", "__filename", "module", "exports"]
+    "globals": ["module"]
   },
   "json": {
     "formatter": {
       "enabled": false
     }
-  },
-	"overrides": [
-      {
-        "include": ["*.svelte", "*.astro", "*.vue"],
-        "linter": {
-          "enabled": true,
-          "rules": {
-            "recommended": true
-          }
-        }
-      }
-    ]
+  }
 }
