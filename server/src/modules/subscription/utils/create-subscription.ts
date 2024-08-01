@@ -1,10 +1,18 @@
-import { addIdPair } from "@/handlers/machine-handler.ts";
-import { resetSourceToken } from "@/handlers/token-handler.ts";
-import { sourceFetch } from "@/helpers/fetch.ts";
-import { InternalServerError } from "@/middlewares/error/base.ts";
-import type { SourceErrorResponse, SubscriptionRequest } from "@/types.ts";
+import { addIdPair, isSourceIdExist } from '@/handlers/machine-handler.ts';
+import { resetSourceToken } from '@/handlers/token-handler.ts';
+import { sourceFetch } from '@/helpers/fetch.ts';
+import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
+import type { SourceErrorResponse, SubscriptionRequest } from '@/types.ts';
 
-export async function createSubscription(subReq: SubscriptionRequest, sourceId: string, destId: string) {
+export async function createSubscription(
+  subReq: SubscriptionRequest,
+  sourceId: string,
+  destId: string
+) {
+  if (isSourceIdExist(sourceId)) {
+    throw new BadRequestError(`Subscription already exists for sourceId: ${sourceId}`);
+  }
+
   const serverAnswer = await sourceFetch().post('/orion/v2/subscriptions', subReq);
 
   if (!serverAnswer.ok) {

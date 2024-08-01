@@ -1,9 +1,19 @@
-import { BadRequestError } from "@/middlewares/error/base.ts";
+import { BadRequestError } from '@/middlewares/error/base.ts';
 
 const idPairs = new Map<string, string>();
 
-export function getAllIdPairs(): Map<string, string> {
-  return {...idPairs};
+type IdPair = { targetId: string; sourceId: string };
+
+export function getAllIdPairs(): IdPair[] {
+  let idPairsArray: IdPair[] = [];
+
+  idPairs.forEach((value, key) => {
+    idPairsArray.push({ targetId: value, sourceId: key });
+  });
+
+  console.log(idPairsArray);
+
+  return idPairsArray;
 }
 
 export function getTargetId(sourceId: string): string | undefined {
@@ -44,4 +54,8 @@ export function removePairByTargetId(targetId: string): void {
   } else {
     throw new BadRequestError(`No source found for targetId: ${targetId}`);
   }
+}
+
+export function isSourceIdExist(sourceId: string): boolean {
+  return idPairs.has(sourceId);
 }
