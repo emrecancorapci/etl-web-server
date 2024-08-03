@@ -28,7 +28,9 @@ export interface SourceSubscription {
   description: string;
   // Machine status
   status: string;
+  // Subject object
   subject: {
+    // Subject entities
     entities: [
       {
         // Machine ID
@@ -37,6 +39,7 @@ export interface SourceSubscription {
         type: string;
       },
     ];
+    // Notification condition
     condition: {
       // Condition attribute (mostly empty)
       attrs: Array<string>;
@@ -45,6 +48,10 @@ export interface SourceSubscription {
     };
   };
   notification: {
+    // Sent notification times
+    timesSent?: number;
+    // Last notification date
+    lastNotification?: string;
     // Attribute to notify
     attrs: Array<string>;
     // Notify only changed attributes
@@ -58,9 +65,23 @@ export interface SourceSubscription {
       // Method to notify
       method: 'POST';
     };
+    // Last failure date
+    lastFailure?: string;
+    // Last failure reason
+    lastFailureReason?: string;
+    // Failure counter
+    failsCounter?: number;
     // I don't know this one
     covered: boolean;
   };
   // Notification period in seconds
   throttling: number;
 }
+
+export interface AddSubscriptionRequest {
+  sourceId: string;
+  destinationId: string;
+  serverUrl: string;
+}
+
+export type SubscriptionResponse = SourceSubscription & { targetId: string };
