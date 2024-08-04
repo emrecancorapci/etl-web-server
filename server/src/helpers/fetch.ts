@@ -1,12 +1,12 @@
 import { getDestinationToken, getSourceToken } from '@/handlers/token-handler.ts';
 
 export function fetchDestination() {
-  const { TARGET_API_URI } = process.env;
+  const { DEST_URI } = process.env;
 
   async function get(path: string): Promise<Response> {
     const ticketId = await getDestinationToken();
 
-    return await fetch(`${TARGET_API_URI}${path}`, {
+    return await fetch(`${DEST_URI}${path}`, {
       method: 'GET',
       headers: {
         AToken: `{"TicketId": "${ticketId}"}`,
@@ -17,7 +17,7 @@ export function fetchDestination() {
   async function post<T>(path: string, data: T): Promise<Response> {
     const ticketId = await getDestinationToken();
 
-    return await fetch(`${TARGET_API_URI}${path}`, {
+    return await fetch(`${DEST_URI}${path}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,12 +31,12 @@ export function fetchDestination() {
 }
 
 export function sourceFetch() {
-  const { SOURCE_API_URI } = process.env;
+  const { SRC_URI } = process.env;
 
   async function get(path: string): Promise<Response> {
     const token = await getSourceToken();
 
-    return await fetch(`${SOURCE_API_URI}${path}`, {
+    return await fetch(`${SRC_URI}${path}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -48,7 +48,7 @@ export function sourceFetch() {
   async function post<T>(path: string, data: T): Promise<Response> {
     const token = await getSourceToken();
 
-    return await fetch(`${SOURCE_API_URI}${path}`, {
+    return await fetch(`${SRC_URI}${path}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,10 +58,10 @@ export function sourceFetch() {
     });
   }
 
-  async function del(path: string) : Promise<Response> {
+  async function del(path: string): Promise<Response> {
     const token = await getSourceToken();
 
-    return await fetch(`${SOURCE_API_URI}${path}`, {
+    return await fetch(`${SRC_URI}${path}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

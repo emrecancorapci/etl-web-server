@@ -1,7 +1,12 @@
 import * as crypto from 'node:crypto';
 
 import { InternalServerError } from '@/middlewares/error/base.ts';
-import type { DestinationTokenRequest, DestinationTokenResponse, SourceTokenRequest, SourceTokenResponse } from '@/types.ts';
+import type {
+  DestinationTokenRequest,
+  DestinationTokenResponse,
+  SourceTokenRequest,
+  SourceTokenResponse,
+} from '@/types.ts';
 
 let destinationToken: string | undefined = '';
 let sourceToken: string | undefined = '';
@@ -80,24 +85,23 @@ export async function resetDestinationToken(): Promise<string> {
  * if the response is not OK, if the result is false, or if the token is null.
  */
 async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
-  const { TARGET_API_URI, TARGET_USERNAME, TARGET_PASSWORD } = process.env;
+  const { DEST_URI, DEST_EMAIL, DEST_PASS } = process.env;
 
-  if (!TARGET_API_URI || !TARGET_USERNAME || !TARGET_PASSWORD)
-    throw new InternalServerError('Missing TARGET environment variables. Please check your .env file.');
+  if (!DEST_URI || !DEST_EMAIL || !DEST_PASS)
+    throw new InternalServerError(
+      'Missing TARGET environment variables. Please check your .env file.'
+    );
 
-  const not_enough_crypted_password = crypto
-    .createHash('md5')
-    .update(TARGET_PASSWORD)
-    .digest('hex');
+  const not_enough_crypted_password = crypto.createHash('md5').update(DEST_PASS).digest('hex');
 
   const password = crypto.createHash('md5').update(not_enough_crypted_password).digest('hex');
 
   const body: DestinationTokenRequest = {
-    username: TARGET_USERNAME,
+    username: DEST_EMAIL,
     password,
   };
 
-  const response = await fetch(`${TARGET_API_URI}/Security/login`, {
+  const response = await fetch(`${DEST_URI}/Security/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -111,7 +115,7 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
   if (!response.ok) {
     throw new InternalServerError('Response is not OK.');
   }
-  const data = await response.json() as DestinationTokenResponse;
+  const data = (await response.json()) as DestinationTokenResponse;
 
   if (!data.result) {
     console.error(data);
@@ -131,18 +135,18 @@ async function destinationTokenReceiver(): Promise<DestinationTokenResponse> {
  * @returns A promise that resolves to the source token response.
  */
 async function sourceTokenReceiver(): Promise<SourceTokenResponse> {
-  const { SOURCE_API_URI } = process.env;
+  const { SRC_URI } = process.env;
   let path = '/oauth2/token';
 
   const body: SourceTokenRequest = refreshToken
     ? { grant_type: 'refresh_token', refresh_token: refreshToken }
     : {
         grant_type: 'client_credentials',
-        client_id: process.env.SOURCE_CLIENT_ID,
-        client_secret: process.env.SOURCE_CLIENT_SECRET,
+        client_id: process.env.SRC_ID,
+        client_secret: process.env.SRC_SECRET,
       };
 
-  const response = await fetch(`${SOURCE_API_URI}${path}`, {
+  const response = await fetch(`${SRC_URI}${path}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
