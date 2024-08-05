@@ -25,7 +25,7 @@ export default function AddSubscription() {
       const request = {
         sourceId: data.sourceId,
         destinationId: data.destinationId,
-        serverUrl: window.location.href,
+        serverUrl: `${window.location.href}api/subscription`,
       };
 
       if (!token) {
