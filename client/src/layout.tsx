@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export default function MainLayout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="dark m-0 flex min-h-screen min-w-full flex-col items-center justify-center bg-zinc-950 p-0">
       <div className="flex w-full flex-col bg-card">

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from '@/components/ui/button';
-import type { SubscriptionResponse } from '../types';
-import AddPairPopover from './add-pair-popover';
+import type { SubscriptionResponse } from '@/types';
+import AddPairPopover from './pair/add-pair-popover';
 import { useCallback, type ReactNode } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getLocation } from '@/lib/get-location';

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import AddSubscriptionForm from './add-sub-form';
-import type { AddSubscriptionRequest } from '../types';
+import type { AddSubscriptionRequest } from '@/types';
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
 

@@ -1,7 +1,7 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import type { AddSubscriptionRequest } from '../types';
+import type { AddSubscriptionRequest } from '@/types';
 
 interface Properties {
   onSubmit: SubmitHandler<AddSubscriptionRequest>;

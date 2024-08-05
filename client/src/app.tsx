@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import AddSubscriptionModal from './components/add-sub-modal';
-import SubscriptionCard from './components/sub-card';
+import AddSubscriptionModal from '@/components/app/subscription/add-sub-modal';
+import SubscriptionCard from '@/components/app/subscription/sub-card';
 import type { SubscriptionResponse } from './types';
 import { getLocation } from '@/lib/get-location';
 
-export default function Subscriptions() {
+export default function App() {
   const {
     data: subs,
     isPending,
