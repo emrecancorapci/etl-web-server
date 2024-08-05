@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 
 import {
@@ -11,10 +11,15 @@ import {
 import { Button } from '@/components/ui/button';
 import AddSubscriptionForm from './add-sub-form';
 import type { AddSubscriptionRequest } from '@/types';
+import { useTokenStore } from '@/token-store';
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 export default function AddSubscription() {
+  const token = useTokenStore((s) => s.token);
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   const { isError, isSuccess, error, mutateAsync } = useMutation({
     mutationFn: async (data: Partial<AddSubscriptionRequest>) => {
       const request = {
@@ -22,10 +27,16 @@ export default function AddSubscription() {
         destinationId: data.destinationId,
         serverUrl: window.location.href,
       };
+
+      if (!token) {
+        throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
+      }
+
       await fetch('/api/subscription', {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       }).catch(() => {
@@ -36,9 +47,10 @@ export default function AddSubscription() {
         setOpen(false);
       });
     },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+    },
   });
-
-  const [open, setOpen] = useState(false);
 
   const onSubmit = useCallback(
     async (formData: AddSubscriptionRequest) => {

@@ -38,7 +38,9 @@ export default function AddSubscriptionForm({ onSubmit }: Properties) {
         />
         {errors.destinationId && <p>{errors.destinationId.message}</p>}
       </label>
-      <Button className='w-48 py-6' type="submit">Gönder</Button>
+      <Button className="w-48 py-6" type="submit">
+        Gönder
+      </Button>
     </form>
   );
 }

@@ -1,30 +1,9 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button } from '@/components/ui/button';
 import type { SubscriptionResponse } from '@/types';
 import AddPairPopover from './pair/add-pair-popover';
-import { useCallback, type ReactNode } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { getLocation } from '@/lib/get-location';
+import DeleteSubscription from './delete-sub-button';
+import type { ReactNode } from 'react';
 
 export default function SubscriptionCard({ sub }: { sub: SubscriptionResponse }) {
-  const { isError, error, isSuccess, mutateAsync } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`${getLocation()}/api/subscription/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      return response;
-    },
-  });
-
-  const onDelete = useCallback(async () => {
-    await mutateAsync(sub.id);
-  }, [mutateAsync, sub.id]);
-
   return (
     <div className="flex flex-col gap-2 rounded-lg border bg-background px-0 py-2 text-card-foreground shadow-sm">
       <h2 className="px-4 py-1 text-xl font-bold text-primary">{sub.description}</h2>
@@ -60,10 +39,7 @@ export default function SubscriptionCard({ sub }: { sub: SubscriptionResponse })
         )}
       </ul>
       <div className="flex justify-between px-4">
-        <p>{isError && error.message}</p>
-        <Button variant={'destructive'} onClick={() => onDelete()} className="font-semibold">
-          {isError ? 'Hata' : isSuccess ? 'Başarılı' : 'Kaldır'}
-        </Button>
+        <DeleteSubscription id={sub.id} />
       </div>
     </div>
   );
