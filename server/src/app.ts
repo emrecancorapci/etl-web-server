@@ -39,11 +39,11 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '1kb' }));
 app.use(morgan(NODE_ENV));
 
 app.use('/api', router);
+app.use('/api', notFound);
 
 app.use(staticFileServer);
 app.use(express.static('public'));
 
-app.use(notFound);
 app.use(errorHandler);
 
 export default app;

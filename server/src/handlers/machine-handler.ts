@@ -1,61 +1,63 @@
 import { BadRequestError } from '@/middlewares/error/base.ts';
 
-const idPairs = new Map<string, string>();
+let idRecords: Array<IdPair> = [];
 
-type IdPair = { targetId: string; sourceId: string };
+type IdPair = { srcId: string; destId: string };
 
 export function getAllIdPairs(): IdPair[] {
-  let idPairsArray: IdPair[] = [];
-
-  idPairs.forEach((value, key) => {
-    idPairsArray.push({ targetId: value, sourceId: key });
-  });
-
-  console.log(idPairsArray);
-
-  return idPairsArray;
+  return idRecords;
 }
 
-export function getTargetId(sourceId: string): string | undefined {
-  return idPairs.get(sourceId) || undefined;
+export function getTargetId(srcId: string): string | undefined {
+  return idRecords.find((pair) => pair.srcId === srcId)?.destId;
 }
 
-export function getSourceId(targetId: string): string | undefined {
-  return Array.from(idPairs.entries()).find(([_, id]) => id === targetId)?.[0];
+export function getSourceId(destId: string): string | undefined {
+  return idRecords.find((pair) => pair.destId === destId)?.destId;
 }
 
-export function addIdPair(sourceId: string, targetId: string): void {
-  if (idPairs.has(sourceId)) {
-    throw new BadRequestError(`Id pair already exists for sourceId: ${sourceId}`);
+export function addIdPair(srcId: string, destId: string): void {
+  const isExist = idRecords.find((pair) => pair.srcId === srcId)?.destId;
+
+  if (isExist) {
+    throw new BadRequestError(`Pair already exists for source id: ${srcId}`);
   }
 
-  idPairs.set(sourceId, targetId);
+  idRecords.push({ srcId, destId });
 }
 
-export function updateIdPair(sourceId: string, targetId: string): void {
-  idPairs.set(sourceId, targetId);
-}
+export function updateIdPair(srcId: string, destId: string): void {
+  const updatedRecords = idRecords.filter((pair) => pair.srcId === srcId);
 
-export function removePairBySourceId(sourceId: string): void {
-  const isPairDeleted = idPairs.delete(sourceId);
-
-  if (isPairDeleted) {
-    return;
-  } else {
-    throw new BadRequestError(`No pair found for sourceId: ${sourceId}`);
+  if (updatedRecords.length === idRecords.length) {
+    throw new BadRequestError(`No pair found for source id: ${srcId}`);
   }
+
+  updatedRecords.push({ srcId, destId });
+
+  idRecords = updatedRecords;
 }
 
-export function removePairByTargetId(targetId: string): void {
-  const sourceId = getSourceId(targetId);
+export function removePairBySourceId(srcId: string): void {
+  const updatedRecords = idRecords.filter((pair) => pair.srcId === srcId);
 
-  if (sourceId) {
-    idPairs.delete(sourceId);
-  } else {
-    throw new BadRequestError(`No source found for targetId: ${targetId}`);
+  if (updatedRecords.length === idRecords.length) {
+    throw new BadRequestError(`No pair found for source id: ${srcId}`);
   }
+
+  idRecords = updatedRecords;
 }
 
-export function isSourceIdExist(sourceId: string): boolean {
-  return idPairs.has(sourceId);
+export function removePairByTargetId(destId: string): void {
+  const updatedRecords = idRecords.filter((pair) => pair.destId === destId);
+
+  if (updatedRecords.length === idRecords.length) {
+    throw new BadRequestError(`No pair found for destination id: ${destId}`);
+  }
+
+  idRecords = updatedRecords;
+}
+
+export function isSourceIdExist(srcId: string): boolean {
+  return idRecords.some((pair) => pair.srcId === srcId);
 }

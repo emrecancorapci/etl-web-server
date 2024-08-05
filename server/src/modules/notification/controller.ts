@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
 
 import { getTargetId } from '@/handlers/machine-handler.ts';
-import { dataFormatter } from '@/helpers/data-formatter.ts';
 import { fetchDestination } from '@/helpers/fetch.ts';
 import { InternalServerError } from '@/middlewares/error/base.ts';
+import { dataFormatter } from '@/modules/notification/helpers/data-formatter.ts';
 import type { Notification, RequestParams } from '@/types.ts';
 
 export async function post(
