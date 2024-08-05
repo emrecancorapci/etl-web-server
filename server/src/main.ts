@@ -2,9 +2,32 @@ import http from 'node:http';
 
 import app from './app.ts';
 
-const { SRC_URI, SRC_ID, SRC_SECRET, DEST_URI, DEST_EMAIL, DEST_PASS, NODE_PORT } = process.env;
+const {
+  SRC_URI,
+  SRC_ID,
+  SRC_SECRET,
+  DEST_URI,
+  DEST_EMAIL,
+  DEST_PASS,
+  NODE_PORT,
+  NODE_PASS,
+  NODE_SECRET,
+  NODE_HASH,
+} = process.env;
 
-if (!(SRC_URI && SRC_ID && SRC_SECRET && DEST_URI && DEST_EMAIL && DEST_PASS)) {
+if (
+  !(
+    SRC_URI &&
+    SRC_ID &&
+    SRC_SECRET &&
+    DEST_URI &&
+    DEST_EMAIL &&
+    DEST_PASS &&
+    NODE_HASH &&
+    NODE_SECRET &&
+    NODE_PASS
+  )
+) {
   throw Error('Some required environment variables are not set');
 }
 
