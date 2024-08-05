@@ -27,7 +27,7 @@ export function addIdPair(srcId: string, destId: string): void {
 }
 
 export function updateIdPair(srcId: string, destId: string): void {
-  const updatedRecords = idRecords.filter((pair) => pair.srcId === srcId);
+  const updatedRecords = idRecords.filter((pair) => pair.srcId !== srcId);
 
   if (updatedRecords.length === idRecords.length) {
     throw new BadRequestError(`No pair found for source id: ${srcId}`);
@@ -39,7 +39,7 @@ export function updateIdPair(srcId: string, destId: string): void {
 }
 
 export function removePairBySourceId(srcId: string): void {
-  const updatedRecords = idRecords.filter((pair) => pair.srcId === srcId);
+  const updatedRecords = idRecords.filter((pair) => pair.srcId !== srcId);
 
   if (updatedRecords.length === idRecords.length) {
     throw new BadRequestError(`No pair found for source id: ${srcId}`);
@@ -49,7 +49,7 @@ export function removePairBySourceId(srcId: string): void {
 }
 
 export function removePairByTargetId(destId: string): void {
-  const updatedRecords = idRecords.filter((pair) => pair.destId === destId);
+  const updatedRecords = idRecords.filter((pair) => pair.destId !== destId);
 
   if (updatedRecords.length === idRecords.length) {
     throw new BadRequestError(`No pair found for destination id: ${destId}`);

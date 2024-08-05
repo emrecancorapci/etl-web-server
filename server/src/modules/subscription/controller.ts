@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import { getTargetId, removePairBySourceId } from '@/handlers/machine-handler.ts';
+import { getTargetId, isSourceIdExist, removePairBySourceId } from '@/handlers/machine-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
 import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
 import type { RequestParams, SourceErrorResponse, SubscriptionResponse } from '@/types.ts';
@@ -47,7 +47,7 @@ export async function get(request: Request, response: Response) {
 
   if (!rawResponse.ok) {
     if (rawResponse.status === 404) {
-      throw new BadRequestError('Subscription not found.');
+      return response.status(200);
     } else {
       const error = (await rawResponse.json()) as SourceErrorResponse;
 
@@ -61,7 +61,7 @@ export async function get(request: Request, response: Response) {
 
   const data = { ...serverResponse, targetId };
 
-  response.status(200).send({ data });
+  return response.status(200).send({ data });
 }
 
 export async function post(
@@ -76,6 +76,12 @@ export async function post(
 
   if (!(typeof sourceId === 'string') || !(typeof destinationId === 'string')) {
     throw new BadRequestError('SourceId and DestinationId must be strings.');
+  }
+
+  const isIdExist = isSourceIdExist(sourceId);
+
+  if (isIdExist) {
+    throw new BadRequestError(`SourceId ${sourceId} already exists.`);
   }
 
   const description = `${sourceId} Subscription`;
@@ -116,7 +122,11 @@ export async function del(request: Request, response: Response) {
 
   const getServerResponse = (await rawResponse.json()) as SubscriptionResponse;
 
-  removePairBySourceId(getServerResponse.subject.entities[0].id);
+  try {
+    removePairBySourceId(getServerResponse.subject.entities[0].id);
+  } catch (error) {
+    console.error(error);
+  }
 
   response.status(204).send();
 }
