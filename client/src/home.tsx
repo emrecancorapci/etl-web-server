@@ -19,7 +19,7 @@ export default function Home() {
       if (!token) {
         throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
       }
-      const response = await fetch(`/api/subscription`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_URI as string}/api/subscription`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,

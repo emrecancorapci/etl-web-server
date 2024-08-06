@@ -32,7 +32,7 @@ export default function AddSubscription() {
         throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
       }
 
-      await fetch('/api/subscription', {
+      await fetch(`${import.meta.env.VITE_APP_URI as string}/api/subscription`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {

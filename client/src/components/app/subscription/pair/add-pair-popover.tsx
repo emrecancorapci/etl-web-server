@@ -23,7 +23,7 @@ export default function AddPairPopover({ sourceId }: { sourceId: string }) {
         throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
       }
 
-      await fetch('/api/pair', {
+      await fetch(`${import.meta.env.VITE_APP_URI as string}/api/pair`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {

@@ -14,7 +14,7 @@ export default function DeleteSubscription({ id }: { id: string }) {
         throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
       }
 
-      const response = await fetch(`/api/subscription/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_URI as string}/api/subscription/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

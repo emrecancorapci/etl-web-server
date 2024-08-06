@@ -24,7 +24,7 @@ export const useTokenStore = create<TokenStore>()((set) => ({
     }
   },
   login: (pass: string) => {
-    void fetch(`/api/login`, {
+    void fetch(`${import.meta.env.VITE_APP_URI as string}/api/login`, {
       method: 'POST',
       body: JSON.stringify({ pass }),
     }).then(async (res) => {
