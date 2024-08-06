@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import type { NextFunction, Request,Response } from 'express';
 
-import { getDirname } from '@/helpers/get-dir.ts';
+import { getDirname } from '@/helpers/get-dir.cjs';
 
 export function staticFileServer(req: Request, res: Response, next: NextFunction) {
   if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {

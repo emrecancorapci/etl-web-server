@@ -7,7 +7,7 @@ import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { getDirname } from './helpers/get-dir.ts';
+import { getDirname } from './helpers/get-dir.cjs';
 import errorHandler from './middlewares/error/error-handler.ts';
 import notFound from './middlewares/not-found.ts';
 import { staticFileServer } from './middlewares/static-server.ts';
