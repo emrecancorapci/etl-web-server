@@ -8,8 +8,8 @@
     "node": "22.4.0"
   },
   "scripts": {
-    "start": "node esbuild.js & node ../dist/server.cjs",
-    "start:pm2": "node esbuild.js & pm2 start ../dist/server.cjs",
+    "start": "node esbuild.js & node ./server.cjs",
+    "start:pm2": "node esbuild.js & pm2 start ./server.cjs",
     "build": "node esbuild.js",
     "dev": "tsx src/main.ts"
   },

@@ -5,6 +5,7 @@ build({
   bundle: true,
   platform: 'node',
   target: 'node20',
-  outfile: '../dist/server.cjs',
+  outfile: './server.cjs',
   format: 'cjs',
+  external: ['argon2']
 });
