@@ -8,7 +8,7 @@ import { subscriptionRouter } from './modules/subscription/routes.ts';
 
 const router: Router = Router();
 
-router.use('/notification', auth, notificationRouter);
+router.use('/notification', notificationRouter);
 router.use('/subscription', auth, subscriptionRouter);
 router.use('/pair', auth, pairRouter);
 router.use('/login', loginRouter);
