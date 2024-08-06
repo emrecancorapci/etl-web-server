@@ -25,7 +25,7 @@ export default function AddSubscription() {
       const request = {
         sourceId: data.sourceId,
         destinationId: data.destinationId,
-        serverUrl: `${import.meta.env.VITE_APP_URI as string}/api/notification`,
+        serverUrl: import.meta.env.VITE_APP_URI as string,
       };
 
       if (!token) {
