@@ -1,6 +1,10 @@
-import type { SubscriptionRequest } from "@/types.ts";
+import type { SubscriptionRequest } from '@/types.ts';
 
-export function generateSubscriptionRequest(description: string, sourceId: string, url: string): SubscriptionRequest {
+export function generateSubscriptionRequest(
+  description: string,
+  sourceId: string,
+  url: string
+): SubscriptionRequest {
   return {
     description,
     subject: {
@@ -44,6 +48,5 @@ export function generateSubscriptionRequest(description: string, sourceId: strin
       ],
       attrsFormat: 'simplifiedKeyValues',
     },
-    throttling: 8 * 60,
   };
 }

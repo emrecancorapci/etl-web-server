@@ -61,7 +61,7 @@ export interface SubscriptionRequest {
     attrs: string[];
     attrsFormat: 'simplifiedKeyValues';
   };
-  throttling: number;
+  throttling?: number;
 }
 
 /**
