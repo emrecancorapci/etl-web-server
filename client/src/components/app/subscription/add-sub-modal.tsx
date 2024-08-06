@@ -25,14 +25,14 @@ export default function AddSubscription() {
       const request = {
         sourceId: data.sourceId,
         destinationId: data.destinationId,
-        serverUrl: `${window.location.href}api/subscription`,
+        serverUrl: `${import.meta.env.VITE_APP_URI as string}/api/notification`,
       };
 
       if (!token) {
         throw new Error('Token bulunamadı. Lütfen tekrar giriş yapınız.');
       }
 
-      await fetch(`${import.meta.env.VITE_APP_URI as string}/api/subscription`, {
+      await fetch(`/api/subscription`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {
