@@ -7,17 +7,14 @@ import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { getDirname } from './helpers/get-dir.cjs';
 import errorHandler from './middlewares/error/error-handler.ts';
 import notFound from './middlewares/not-found.ts';
-import { staticFileServer } from './middlewares/static-server.ts';
 import { router } from './routes.ts';
 
 dotenv.config();
 
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 
-console.log(getDirname());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -41,7 +38,6 @@ app.use(morgan(NODE_ENV));
 app.use('/api', router);
 app.use('/api', notFound);
 
-app.use(staticFileServer);
 app.use(express.static('public'));
 
 app.use(errorHandler);
