@@ -1,6 +1,9 @@
 import http from 'node:http';
 
+import { CronJob } from 'cron';
+
 import app from './app.ts';
+import { sendDataJob } from './jobs/send-data.ts';
 
 const {
   SRC_URI,
@@ -36,6 +39,12 @@ if (!NODE_PORT) {
 }
 
 const PORT = Number(NODE_PORT) || 5000;
+
+CronJob.from({
+  cronTime: '0 0 * * * *',
+  onTick: sendDataJob,
+  start: true,
+});
 
 http
   .createServer(app)

@@ -1,32 +1,53 @@
 import type { DestinationBody, Notification } from '@/types.ts';
 
-let data: Notification[] = [];
+let data: { id: string; n: Notification[]; initDate: Date }[] = [];
 
-export function addData(dataItem: Notification): void {
-  data.push(dataItem);
+export function add(dataItem: Notification): void {
+  const item = data.find((item) => item.id === dataItem.id);
+
+  if (!item) {
+    data.push({ id: dataItem.id, n: [dataItem], initDate: new Date() });
+  } else {
+    item.n.push(dataItem);
+  }
 }
 
-export function clearData(): void {
+export function clearId(id: string): void {
+  const item = data.find((item) => item.id === id);
+
+  if (item) Object.assign(item, { id: item.id, n: [], initDate: new Date() });
+}
+
+export function clearAll(): void {
   data = [];
 }
 
-export function getDataLength(): number {
-  return data.length;
+export function getDataIdsReadyToSend(): string[] {
+  return data
+    .filter(({ initDate }) => new Date().getTime() - initDate.getTime() >= 60 * 60 * 1000)
+    .map(({ id }) => id);
 }
 
-export function exportData(id: string): DestinationBody {
-  const sumData = data.reduce(
-    (acc, curr) => {
-      acc.PM10 += curr.PM10;
-      acc.PM2P5 += curr.PM2P5;
-      acc.SO2 += curr.SO2;
-      acc.CO += curr.CO;
-      acc.NO2 += curr.NO2;
-      acc.O3 += curr.O3;
-      acc.PM1 += curr.PM1;
-      acc.pressure += curr.pressure;
-      acc.relativeHumidity += curr.relativeHumidity;
-      acc.temperature += curr.temperature;
+export function getAverage(id: string): Notification | undefined {
+  const item = data.find((item) => item.id === id);
+
+  if (!item) {
+    console.error('No data found for this id');
+    return;
+  }
+
+  const { n } = item;
+
+  const sumData = n.reduce(
+    (acc, current) => {
+      acc.PM10 += current.PM10;
+      acc.PM2P5 += current.PM2P5;
+      acc.SO2 += current.SO2;
+      acc.CO += current.CO;
+      acc.NO2 += current.NO2;
+      acc.O3 += current.O3;
+      acc.PM1 += current.PM1;
+      acc.pressure += current.pressure;
       return acc;
     },
     {
@@ -38,31 +59,33 @@ export function exportData(id: string): DestinationBody {
       O3: 0,
       PM1: 0,
       pressure: 0,
-      relativeHumidity: 0,
-      temperature: 0,
     }
   );
 
   const avarageData = {
-    PM10: sumData.PM10 / data.length,
-    PM2P5: sumData.PM2P5 / data.length,
-    SO2: sumData.SO2 / data.length,
-    CO: sumData.CO / data.length,
-    NO2: sumData.NO2 / data.length,
-    O3: sumData.O3 / data.length,
-    PM1: sumData.PM1 / data.length,
-    pressure: sumData.pressure / data.length,
-    relativeHumidity: data[data.length - 1].relativeHumidity,
-    temperature: data[data.length - 1].temperature,
+    // Take the last value of the array
+    id: n[n.length - 1].id,
+    type: n[n.length - 1].type,
+    relativeHumidity: n[n.length - 1].relativeHumidity,
+    temperature: n[n.length - 1].temperature,
+    // Calculate the average
+    PM10: sumData.PM10 / n.length,
+    PM2P5: sumData.PM2P5 / n.length,
+    SO2: sumData.SO2 / n.length,
+    CO: sumData.CO / n.length,
+    NO2: sumData.NO2 / n.length,
+    O3: sumData.O3 / n.length,
+    PM1: sumData.PM1 / n.length,
+    pressure: sumData.pressure / n.length,
   };
 
-  return dataFormatter(avarageData, id);
+  return avarageData;
 }
 
-export function dataFormatter(data: FormatterNotification, targetId: string): DestinationBody {
+export function format(data: Notification, targetId: string): DestinationBody {
   return {
     Stationid: targetId,
-    Readtime: new Date(Date.now() + 3 * 60 * 59 * 1000 ).toISOString(),
+    Readtime: new Date(Date.now() + 3 * 60 * 59 * 1000).toISOString(),
     SoftwareVersion: 'v1.0.0',
     Period: 8,
     PM10: data.PM10,
@@ -87,16 +110,3 @@ export function dataFormatter(data: FormatterNotification, targetId: string): De
     Sicaklik_Status: 1,
   };
 }
-
-type FormatterNotification = {
-  PM10: number;
-  PM2P5: number;
-  SO2: number;
-  CO: number;
-  NO2: number;
-  O3: number;
-  PM1: number;
-  pressure: number;
-  relativeHumidity: number;
-  temperature: number;
-};
