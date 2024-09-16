@@ -44,7 +44,6 @@ export function exportData(id: string): DestinationBody {
   );
 
   const avarageData = {
-    lastData: data[data.length - 1].lastData,
     PM10: sumData.PM10 / data.length,
     PM2P5: sumData.PM2P5 / data.length,
     SO2: sumData.SO2 / data.length,
@@ -63,7 +62,7 @@ export function exportData(id: string): DestinationBody {
 export function dataFormatter(data: FormatterNotification, targetId: string): DestinationBody {
   return {
     Stationid: targetId,
-    Readtime: new Date(data.lastData).toISOString(),
+    Readtime: new Date(Date.now() + 3 * 60 * 59 * 1000 ).toISOString(),
     SoftwareVersion: 'v1.0.0',
     Period: 8,
     PM10: data.PM10,
@@ -100,5 +99,4 @@ type FormatterNotification = {
   pressure: number;
   relativeHumidity: number;
   temperature: number;
-  lastData: string;
 };

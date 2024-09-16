@@ -3,7 +3,6 @@
 //
 export interface Notification {
   id: string;
-  lastData: string;
   type: string;
   relativeHumidity: number;
   NO2: number;

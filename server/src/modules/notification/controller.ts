@@ -23,7 +23,6 @@ export async function post(
     temperature,
     O3,
     PM1,
-    lastData,
   } = request.body;
 
   const notification = {
@@ -39,7 +38,6 @@ export async function post(
     temperature,
     O3,
     PM1,
-    lastData,
   };
 
   console.log('Notification received:', notification);
