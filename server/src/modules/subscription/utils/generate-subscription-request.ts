@@ -26,6 +26,7 @@ export function generateSubscriptionRequest(
           'temperature',
           'O3',
           'PM1',
+          'lastData'
         ],
       },
     },
@@ -45,6 +46,7 @@ export function generateSubscriptionRequest(
         'temperature',
         'O3',
         'PM1',
+        'lastData'
       ],
       attrsFormat: 'simplifiedKeyValues',
     },
