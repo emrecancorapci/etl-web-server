@@ -82,12 +82,12 @@ export function getAverage(id: string): Notification | undefined {
   return avarageData;
 }
 
-export function format(data: Notification, targetId: string): DestinationBody {
+export function format(data: Omit<Notification, 'id' | 'type'>, targetId: string, dateString?: string): DestinationBody {
   return {
     Stationid: targetId,
-    Readtime: new Date(Date.now() + 3 * 60 * 59 * 1000).toISOString(),
+    Readtime: dateString ?? new Date(Date.now() + 3 * 60 * 59 * 1000).toISOString(),
     SoftwareVersion: 'v1.0.0',
-    Period: 8,
+    Period: 60,
     PM10: data.PM10,
     PM10_Status: 1,
     PM25: data.PM2P5,
