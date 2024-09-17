@@ -3,7 +3,7 @@ import * as tomlFileHandler from './toml-file-handler.ts';
 type IdRecords = Record<string, string>;
 type RecordObject = { data: IdRecords };
 
-export function getAllIdRecords(): IdRecords {
+export function getAll(): IdRecords {
   let idRecords = tomlFileHandler.loadFile<RecordObject>('id-records');
 
   if (!idRecords) {
@@ -13,53 +13,53 @@ export function getAllIdRecords(): IdRecords {
   return idRecords.data;
 }
 
-export function getRecordBySourceId(id: string): IdRecords | undefined {
-  let obj = Object.keys(getAllIdRecords()).find((srcId) => srcId === id);
+export function getBySourceId(id: string): IdRecords | undefined {
+  let obj = Object.keys(getAll()).find((srcId) => srcId === id);
   return obj ? { [obj[0]]: obj[1] } : undefined;
 }
 
-export function getRecordByTargetId(id: string): Record<string, string> | undefined {
-  let obj = Object.values(getAllIdRecords()).find((destId) => destId === id);
+export function getByTargetId(id: string): Record<string, string> | undefined {
+  let obj = Object.values(getAll()).find((destId) => destId === id);
   return obj ? { [obj[0]]: obj[1] } : undefined;
 }
 
 export function isSourceIdExist(id: string): boolean {
-  return Object.keys(getAllIdRecords()).some((srcId) => srcId === id);
+  return Object.keys(getAll()).some((srcId) => srcId === id);
 }
 
 export function isTargetIdExist(id: string): boolean {
-  return Object.values(getAllIdRecords()).some((destId) => destId === id);
+  return Object.values(getAll()).some((destId) => destId === id);
 }
 
-export function setIdRecord(srcId: string, destId: string): void {
-  const idRecords = getAllIdRecords();
+export function set(srcId: string, destId: string): void {
+  const idRecords = getAll();
 
   idRecords[srcId] = destId;
 
   tomlFileHandler.saveFile({ data: idRecords }, 'id-records');
 }
 
-export function deleteIdRecordBySourceId(id: string): void {
+export function deleteBySourceId(id: string): void {
   if (!isSourceIdExist(id)) {
     console.error(`No record found for source id: ${id}`);
   }
 
-  const idRecords = getAllIdRecords();
+  const idRecords = getAll();
 
   delete idRecords[id];
 
   tomlFileHandler.saveFile({ data: idRecords }, 'id-records');
 }
 
-export function deleteIdRecordByTargetId(id: string): void {
-  const record = getRecordByTargetId(id);
+export function deleteByTargetId(id: string): void {
+  const record = getByTargetId(id);
 
   if (!record) {
     console.error(`No record found for target id: ${id}`);
     return;
   }
 
-  const idRecords = getAllIdRecords();
+  const idRecords = getAll();
 
   const srcId = Object.keys(record)[0];
 

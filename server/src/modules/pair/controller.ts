@@ -20,7 +20,7 @@ export async function getAll(
   _: Request<RequestParams, ResponseBody>,
   response: Response<ResponseBody>
 ) {
-  const ids = recordHandler.getAllIdRecords();
+  const ids = recordHandler.getAll();
   response.status(200).send({ data: ids });
 }
 
@@ -29,7 +29,7 @@ export async function getTarget(
   request: Request<RequestParams, ResponseBody>,
   response: Response<ResponseBody>
 ) {
-  const record = recordHandler.getRecordBySourceId(request.params.id);
+  const record = recordHandler.getBySourceId(request.params.id);
   const targetId = record ? Object.keys(record)[1] : undefined;
 
   if (!targetId) {
@@ -44,7 +44,7 @@ export async function getSource(
   request: Request<RequestParams, ResponseBody>,
   response: Response<ResponseBody>
 ) {
-  const record = recordHandler.getRecordByTargetId(request.params.id);
+  const record = recordHandler.getByTargetId(request.params.id);
 
   const sourceId = record ? Object.keys(record)[0] : undefined;
 
@@ -66,7 +66,7 @@ export async function post(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
-  recordHandler.setIdRecord(sourceId, destinationId);
+  recordHandler.set(sourceId, destinationId);
 
   console.log('Id pair set:', sourceId, destinationId);
 
@@ -88,7 +88,7 @@ export async function patch(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
-  recordHandler.setIdRecord(sourceId, destinationId);
+  recordHandler.set(sourceId, destinationId);
 
   console.log('Id pair updated:', sourceId, destinationId);
 
@@ -102,7 +102,7 @@ export async function deleteByTargetId(
 ) {
   const { id } = request.params;
 
-  recordHandler.deleteIdRecordByTargetId(id);
+  recordHandler.deleteByTargetId(id);
 
   console.log('Id pair removed by target id:', id);
 
@@ -116,7 +116,7 @@ export async function deleteBySourceId(
 ) {
   const { id } = request.params;
 
-  recordHandler.deleteIdRecordBySourceId(id);
+  recordHandler.deleteBySourceId(id);
 
   console.log('Id pair removed source id:', id);
 
