@@ -1,4 +1,4 @@
-import { addIdPair, isSourceIdExist } from '@/handlers/machine-handler.ts';
+import * as recordHandler from '@/handlers/record-handler.ts';
 import { resetSourceToken } from '@/handlers/token-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
 import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
@@ -9,7 +9,7 @@ export async function createSubscription(
   sourceId: string,
   destId: string
 ) {
-  if (isSourceIdExist(sourceId)) {
+  if (recordHandler.isSourceIdExist(sourceId)) {
     throw new BadRequestError(`Subscription already exists for sourceId: ${sourceId}`);
   }
 
@@ -30,7 +30,7 @@ export async function createSubscription(
 
   console.log('Subscription created successfully');
 
-  addIdPair(sourceId, destId);
+  recordHandler.set(sourceId, destId);
 
   console.log('Id pair added:', sourceId, destId);
 }

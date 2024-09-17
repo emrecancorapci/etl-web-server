@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import { getTargetId, isSourceIdExist, removePairBySourceId } from '@/handlers/machine-handler.ts';
+import * as recordHandler from '@/handlers/record-handler.ts';
 import { sourceFetch } from '@/helpers/fetch.ts';
 import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
 import type { RequestParams, SourceErrorResponse, SubscriptionResponse } from '@/types.ts';
@@ -32,7 +32,7 @@ export async function getAll(_: Request, response: Response) {
   const serverResponse = (await rawResponse.json()) as SubscriptionResponse[];
 
   const data = serverResponse.map((subscription: SubscriptionResponse) => {
-    const targetId = getTargetId(subscription.subject.entities[0].id);
+    const targetId = recordHandler.getTargetId(subscription.subject.entities[0].id);
 
     return { ...subscription, targetId };
   });
@@ -57,7 +57,7 @@ export async function get(request: Request, response: Response) {
 
   const serverResponse = (await rawResponse.json()) as SubscriptionResponse;
 
-  const targetId = getTargetId(serverResponse.subject.entities[0].id);
+  const targetId = recordHandler.getTargetId(serverResponse.subject.entities[0].id);
 
   const data = { ...serverResponse, targetId };
 
@@ -78,9 +78,7 @@ export async function post(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
-  const isIdExist = isSourceIdExist(sourceId);
-
-  if (isIdExist) {
+  if (recordHandler.isSourceIdExist(sourceId)) {
     throw new BadRequestError(`SourceId ${sourceId} already exists.`);
   }
 
@@ -123,7 +121,7 @@ export async function del(request: Request, response: Response) {
   const getServerResponse = (await rawResponse.json()) as SubscriptionResponse;
 
   try {
-    removePairBySourceId(getServerResponse.subject.entities[0].id);
+    recordHandler.deleteBySourceId(getServerResponse.subject.entities[0].id);
   } catch (error) {
     console.error(error);
   }

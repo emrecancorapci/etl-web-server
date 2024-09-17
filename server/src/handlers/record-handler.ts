@@ -13,24 +13,6 @@ export function getAll(): IdRecords {
   return idRecords.data;
 }
 
-export function getBySourceId(id: string): IdRecords | undefined {
-  let obj = Object.keys(getAll()).find((srcId) => srcId === id);
-  return obj ? { [obj[0]]: obj[1] } : undefined;
-}
-
-export function getByTargetId(id: string): Record<string, string> | undefined {
-  let obj = Object.values(getAll()).find((destId) => destId === id);
-  return obj ? { [obj[0]]: obj[1] } : undefined;
-}
-
-export function isSourceIdExist(id: string): boolean {
-  return Object.keys(getAll()).some((srcId) => srcId === id);
-}
-
-export function isTargetIdExist(id: string): boolean {
-  return Object.values(getAll()).some((destId) => destId === id);
-}
-
 export function set(srcId: string, destId: string): void {
   const idRecords = getAll();
 
@@ -59,11 +41,35 @@ export function deleteByTargetId(id: string): void {
     return;
   }
 
-  const idRecords = getAll();
-
   const srcId = Object.keys(record)[0];
 
-  delete idRecords[srcId];
+  deleteBySourceId(srcId);
+}
 
-  tomlFileHandler.saveFile({ data: idRecords }, 'id-records');
+export function getBySourceId(id: string): IdRecords | undefined {
+  let obj = Object.keys(getAll()).find((srcId) => srcId === id);
+  return obj ? { [obj[0]]: obj[1] } : undefined;
+}
+
+export function getByTargetId(id: string): Record<string, string> | undefined {
+  let obj = Object.values(getAll()).find((destId) => destId === id);
+  return obj ? { [obj[0]]: obj[1] } : undefined;
+}
+
+export function isSourceIdExist(id: string): boolean {
+  return Object.keys(getAll()).some((srcId) => srcId === id);
+}
+
+export function isTargetIdExist(id: string): boolean {
+  return Object.values(getAll()).some((destId) => destId === id);
+}
+
+export function getSourceId(id: string): string | undefined {
+  const record = getByTargetId(id);
+
+  return record ? Object.keys(record)[0] : undefined;
+}
+
+export function getTargetId(id: string): string | undefined {
+  return getBySourceId(id)?.[id];
 }

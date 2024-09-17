@@ -1,11 +1,11 @@
 import * as dataHandler from '@/handlers/data-handler.ts';
-import { getAllIdPairs } from '@/handlers/machine-handler.ts';
+import { getAll } from '@/handlers/record-handler.ts';
 import { fetchDestination } from '@/helpers/fetch.ts';
 
 export async function sendDataJob() {
-  const pairs = getAllIdPairs();
+  const records = getAll();
 
-  for (const { srcId, destId } of pairs) {
+  for (const srcId of Object.keys(records)) {
     const data = dataHandler.getAverage(srcId);
 
     if (!data) {
@@ -13,7 +13,7 @@ export async function sendDataJob() {
       continue;
     }
 
-    const formatted = dataHandler.format(data, destId);
+    const formatted = dataHandler.format(data, records[srcId]);
 
     console.log('Formatted notification:', formatted);
 

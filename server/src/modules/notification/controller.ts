@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
 import * as dataHandler from '@/handlers/data-handler.ts';
-import { getTargetId } from '@/handlers/machine-handler.ts';
+import { isTargetIdExist } from '@/handlers/record-handler.ts';
 import { InternalServerError } from '@/middlewares/error/base.ts';
 import type { Notification, RequestParams } from '@/types.ts';
 
@@ -30,16 +30,12 @@ export async function post(
 
   console.log('Notification received:', notification);
 
-  const targetId = getTargetId(id);
-
-  if (!targetId) {
-    console.log('No target found for this notification');
-    throw new InternalServerError('No target found for this notification');
+  if (!isTargetIdExist(id)) {
+    console.log('No record found for this id');
+    throw new InternalServerError('No record found for this id');
   }
 
   dataHandler.add(notification);
-
-  console.log('Data added to the handler:', notification);
 
   response.status(200).send({ message: 'Notification received' });
 }
