@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
 import * as recordHandler from '@/handlers/record-handler.ts';
-import { sourceFetch } from '@/helpers/fetch.ts';
+import { srcFetcher } from '@/helpers/fetch.ts';
 import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
 import type { RequestParams, SourceErrorResponse, SubscriptionResponse } from '@/types.ts';
 
@@ -21,7 +21,7 @@ interface ResponseBody {
 }
 
 export async function getAll(_: Request, response: Response) {
-  const rawResponse = await sourceFetch().get('/orion/v2/subscriptions');
+  const rawResponse = await srcFetcher().get('/orion/v2/subscriptions');
 
   if (!rawResponse.ok) {
     const error = (await rawResponse.json()) as SourceErrorResponse;
@@ -43,7 +43,7 @@ export async function getAll(_: Request, response: Response) {
 export async function get(request: Request, response: Response) {
   let { id } = request.params;
 
-  const rawResponse = await sourceFetch().get(`/orion/v2/subscriptions/${id}`);
+  const rawResponse = await srcFetcher().get(`/orion/v2/subscriptions/${id}`);
 
   if (!rawResponse.ok) {
     if (rawResponse.status === 404) {
@@ -98,7 +98,7 @@ export async function post(
 export async function del(request: Request, response: Response) {
   let { id } = request.params;
 
-  const rawResponse = await sourceFetch().get(`/orion/v2/subscriptions/${id}`);
+  const rawResponse = await srcFetcher().get(`/orion/v2/subscriptions/${id}`);
 
   if (!rawResponse.ok) {
     if (rawResponse.status === 404) {
@@ -110,7 +110,7 @@ export async function del(request: Request, response: Response) {
     }
   }
 
-  const serverResponse = await sourceFetch().del(`/orion/v2/subscriptions/${id}`);
+  const serverResponse = await srcFetcher().del(`/orion/v2/subscriptions/${id}`);
 
   if (!serverResponse.ok) {
     const error = (await serverResponse.json()) as SourceErrorResponse;

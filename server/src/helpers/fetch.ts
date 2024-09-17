@@ -1,6 +1,6 @@
 import { getDestinationToken, getSourceToken } from '@/handlers/token-handler.ts';
 
-export function fetchDestination() {
+export function destFetcher() {
   const { DEST_URI } = process.env;
 
   async function get(path: string): Promise<Response> {
@@ -30,7 +30,7 @@ export function fetchDestination() {
   return { get, post };
 }
 
-export function sourceFetch() {
+export function srcFetcher() {
   const { SRC_URI } = process.env;
 
   async function get(path: string): Promise<Response> {
