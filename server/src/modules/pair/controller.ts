@@ -1,14 +1,6 @@
 import type { Request, Response } from 'express';
 
-import {
-  addIdPair,
-  getAllIdPairs,
-  getSourceId,
-  getTargetId,
-  removePairBySourceId,
-  removePairByTargetId,
-  updateIdPair,
-} from '@/handlers/machine-handler.ts';
+import * as recordHandler from '@/handlers/record-handler.ts';
 import { BadRequestError } from '@/middlewares/error/base.ts';
 import type { RequestParams } from '@/types.ts';
 
@@ -24,8 +16,11 @@ interface ResponseBody {
 }
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
-export async function getAll(_: Request<RequestParams, ResponseBody>, response: Response<ResponseBody>) {
-  const ids = getAllIdPairs();
+export async function getAll(
+  _: Request<RequestParams, ResponseBody>,
+  response: Response<ResponseBody>
+) {
+  const ids = recordHandler.getAllIdRecords();
   response.status(200).send({ data: ids });
 }
 
@@ -34,9 +29,12 @@ export async function getTarget(
   request: Request<RequestParams, ResponseBody>,
   response: Response<ResponseBody>
 ) {
-  const { id } = request.params;
+  const record = recordHandler.getRecordBySourceId(request.params.id);
+  const targetId = record ? Object.keys(record)[1] : undefined;
 
-  const targetId = getTargetId(id);
+  if (!targetId) {
+    return response.status(404).send({ error: 'Record not found.' });
+  }
 
   response.status(200).send({ data: { targetId } });
 }
@@ -46,9 +44,9 @@ export async function getSource(
   request: Request<RequestParams, ResponseBody>,
   response: Response<ResponseBody>
 ) {
-  const { id } = request.params;
+  const record = recordHandler.getRecordByTargetId(request.params.id);
 
-  const sourceId = getSourceId(id);
+  const sourceId = record ? Object.keys(record)[0] : undefined;
 
   response.status(200).send({ data: { sourceId } });
 }
@@ -68,9 +66,9 @@ export async function post(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
-  addIdPair(sourceId, destinationId);
+  recordHandler.setIdRecord(sourceId, destinationId);
 
-  console.log('Id pair added:', sourceId, destinationId);
+  console.log('Id pair set:', sourceId, destinationId);
 
   response.status(201).send({ data: { sourceId, destinationId } });
 }
@@ -90,7 +88,7 @@ export async function patch(
     throw new BadRequestError('SourceId and DestinationId must be strings.');
   }
 
-  updateIdPair(sourceId, destinationId);
+  recordHandler.setIdRecord(sourceId, destinationId);
 
   console.log('Id pair updated:', sourceId, destinationId);
 
@@ -104,7 +102,7 @@ export async function deleteByTargetId(
 ) {
   const { id } = request.params;
 
-  removePairByTargetId(id);
+  recordHandler.deleteIdRecordByTargetId(id);
 
   console.log('Id pair removed by target id:', id);
 
@@ -118,7 +116,7 @@ export async function deleteBySourceId(
 ) {
   const { id } = request.params;
 
-  removePairBySourceId(id);
+  recordHandler.deleteIdRecordBySourceId(id);
 
   console.log('Id pair removed source id:', id);
 
