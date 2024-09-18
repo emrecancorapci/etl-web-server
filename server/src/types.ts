@@ -135,9 +135,9 @@ export interface SubscriptionResponse {
 // Destination
 //
 export interface DestinationBody {
-  Stationid: string;
-  Readtime: string; // 2019-12-19T10:00:00
-  SoftwareVersion: string; // Cabin?? software version
+  Stationid: string; // Station ID given by the destination
+  Readtime: string; // ISO Standart without ms (2019-12-19T10:00:00)
+  SoftwareVersion: string; // Software version (not important)
   Period: number; // Measurement period in minutes
   PM10: number;
   PM10_Status: number;
@@ -173,12 +173,4 @@ export interface DestinationTokenResponse {
 export interface DestinationTokenRequest {
   username: string;
   password: string;
-}
-
-//
-// Application
-//
-
-export interface RequestParams {
-  [key: string]: string;
 }

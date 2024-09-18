@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 
 import * as recordHandler from '@/handlers/record-handler.ts';
 import { BadRequestError } from '@/middlewares/error/base.ts';
-import type { RequestParams } from '@/types.ts';
 
 interface PostRequestBody {
   sourceId: string;
@@ -17,7 +16,7 @@ interface ResponseBody {
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function getAll(
-  _: Request<RequestParams, ResponseBody>,
+  _: Request<Record<string, string>, ResponseBody>,
   response: Response<ResponseBody>
 ) {
   const ids = recordHandler.getAll();
@@ -26,7 +25,7 @@ export async function getAll(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function getTarget(
-  request: Request<RequestParams, ResponseBody>,
+  request: Request<Record<string, string>, ResponseBody>,
   response: Response<ResponseBody>
 ) {
   const record = recordHandler.getBySourceId(request.params.id);
@@ -41,7 +40,7 @@ export async function getTarget(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function getSource(
-  request: Request<RequestParams, ResponseBody>,
+  request: Request<Record<string, string>, ResponseBody>,
   response: Response<ResponseBody>
 ) {
   const record = recordHandler.getByTargetId(request.params.id);
@@ -53,7 +52,7 @@ export async function getSource(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function post(
-  request: Request<RequestParams, ResponseBody, PostRequestBody>,
+  request: Request<Record<string, string>, ResponseBody, PostRequestBody>,
   response: Response<ResponseBody>
 ) {
   const { sourceId, destinationId } = request.body;
@@ -75,7 +74,7 @@ export async function post(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function patch(
-  request: Request<RequestParams, ResponseBody, PostRequestBody>,
+  request: Request<Record<string, string>, ResponseBody, PostRequestBody>,
   response: Response<ResponseBody>
 ) {
   const { sourceId, destinationId } = request.body;
@@ -97,7 +96,7 @@ export async function patch(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function deleteByTargetId(
-  request: Request<RequestParams, ResponseBody>,
+  request: Request<Record<string, string>, ResponseBody>,
   response: Response<ResponseBody>
 ) {
   const { id } = request.params;
@@ -111,7 +110,7 @@ export async function deleteByTargetId(
 
 // biome-ignore lint/suspicious/useAwait: <explanation>
 export async function deleteBySourceId(
-  request: Request<RequestParams, ResponseBody>,
+  request: Request<Record<string, string>, ResponseBody>,
   response: Response<ResponseBody>
 ) {
   const { id } = request.params;

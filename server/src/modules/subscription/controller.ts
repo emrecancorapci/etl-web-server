@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import * as recordHandler from '@/handlers/record-handler.ts';
 import { srcFetcher } from '@/helpers/fetch.ts';
 import { BadRequestError, InternalServerError } from '@/middlewares/error/base.ts';
-import type { RequestParams, SourceErrorResponse, SubscriptionResponse } from '@/types.ts';
+import type { SourceErrorResponse, SubscriptionResponse } from '@/types.ts';
 
 import { createSubscription } from './utils/create-subscription.ts';
 import { generateSubscriptionRequest } from './utils/generate-subscription-request.ts';
@@ -65,7 +65,7 @@ export async function get(request: Request, response: Response) {
 }
 
 export async function post(
-  request: Request<RequestParams, ResponseBody, PostRequestBody>,
+  request: Request<Record<string, string>, ResponseBody, PostRequestBody>,
   response: Response<ResponseBody>
 ) {
   const { sourceId, destinationId } = request.body;
