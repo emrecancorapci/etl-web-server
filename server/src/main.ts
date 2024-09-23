@@ -56,7 +56,9 @@ CronJob.from({
   start: true,
 });
 
-await sendHistoricalData(2);
+sendHistoricalData(2)
+  .then(() => console.log('Historical data sent'))
+  .catch(console.error);
 
 http
   .createServer(app)
