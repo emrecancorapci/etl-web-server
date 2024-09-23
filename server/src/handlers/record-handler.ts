@@ -3,8 +3,10 @@ import * as tomlFileHandler from './toml-file-handler.ts';
 type IdRecords = Record<string, string>;
 type RecordObject = { data: IdRecords };
 
+const FILE_NAME = 'id-records';
+
 export function getAll(): IdRecords | undefined {
-  let idRecords = tomlFileHandler.loadFile<RecordObject>('id-records');
+  let idRecords = tomlFileHandler.loadFile<RecordObject>(FILE_NAME);
 
   if (!idRecords) {
     console.error('No id records found in the file');
@@ -18,13 +20,13 @@ export function set(srcId: string, destId: string): void {
   const idRecords = getAll();
 
   if (!idRecords) {
-    tomlFileHandler.saveFile({ data: { [srcId]: destId } }, 'id-records');
+    tomlFileHandler.saveFile({ data: { [srcId]: destId } }, FILE_NAME);
     return;
   }
 
   idRecords[srcId] = destId;
 
-  tomlFileHandler.saveFile({ data: idRecords }, 'id-records');
+  tomlFileHandler.saveFile({ data: idRecords }, FILE_NAME);
 }
 
 export function deleteBySourceId(id: string): void {
@@ -41,7 +43,7 @@ export function deleteBySourceId(id: string): void {
 
   delete idRecords[id];
 
-  tomlFileHandler.saveFile({ data: idRecords }, 'id-records');
+  tomlFileHandler.saveFile({ data: idRecords }, FILE_NAME);
 }
 
 export function deleteByTargetId(id: string): void {
@@ -62,9 +64,13 @@ export function getBySourceId(id: string): IdRecords | undefined {
     console.error(`No record found for source id: ${id}`);
     return undefined;
   }
+  const records = getAll();
 
-  let obj = Object.keys(getAll() as IdRecords).find((srcId) => srcId === id);
-  return obj ? { [obj[0]]: obj[1] } : undefined;
+  if (!records) {
+    return undefined;
+  }
+  let obj = Object.keys(records).find((srcId) => srcId === id);
+  return obj ? { [obj]: records[obj] } : undefined;
 }
 
 export function getByTargetId(id: string): Record<string, string> | undefined {
@@ -73,8 +79,14 @@ export function getByTargetId(id: string): Record<string, string> | undefined {
     return undefined;
   }
 
-  let obj = Object.values(getAll() as IdRecords).find((destId) => destId === id);
-  return obj ? { [obj[0]]: obj[1] } : undefined;
+  const records = getAll();
+
+  if (!records) {
+    return undefined;
+  }
+
+  let obj = Object.keys(records).find((srcId) => records[srcId] === id);
+  return obj ? { [obj]: records[obj] } : undefined;
 }
 
 export function isSourceIdExist(id: string): boolean {

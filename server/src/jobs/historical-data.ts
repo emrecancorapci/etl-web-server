@@ -31,6 +31,7 @@ export async function sendHistoricalData(months: number) {
     }
 
     const endDate = new Date(endDateString);
+    endDate.setMinutes(1,0,0);
     const startDate = new Date(endDate.getTime() - months * ONE_MONTH);
 
     const missingData = await fetchHistoricalData(sourceId, startDate, endDate);
