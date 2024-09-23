@@ -15,6 +15,11 @@ export async function sendHistoricalDataJob() {
 export async function sendHistoricalData(months: number) {
   const records = getAll();
 
+  if (!records) {
+    console.error('No records found while sending historical data');
+    return;
+  }
+
   for (const sourceId of Object.keys(records)) {
     const destId = records[sourceId];
 

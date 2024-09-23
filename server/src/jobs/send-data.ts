@@ -5,6 +5,11 @@ import { destFetcher } from '@/helpers/fetch.ts';
 export async function sendDataJob() {
   const records = getAll();
 
+  if (!records) {
+    console.error('No records found while sending data');
+    return;
+  }
+
   for (const srcId of Object.keys(records)) {
     const data = dataHandler.getAverage(srcId);
 
