@@ -83,9 +83,12 @@ export function getAverage(id: string): Notification | undefined {
 }
 
 export function format(data: Omit<Notification, 'id' | 'type'>, targetId: string, dateString?: string): DestinationBody {
+  const date = new Date(Date.now());
+  date.setHours(date.getHours() + 3, 0, 0, 0);
+
   return {
     Stationid: targetId,
-    Readtime: dateString ?? new Date(Date.now() + 3 * 60 * 59 * 1000).toISOString(),
+    Readtime: dateString ?? date.toISOString(),
     SoftwareVersion: 'v1.0.0',
     Period: 60,
     PM10: data.PM10,

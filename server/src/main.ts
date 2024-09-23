@@ -3,7 +3,11 @@ import http from 'node:http';
 import { CronJob } from 'cron';
 
 import app from './app.ts';
+import { sendHistoricalData, sendHistoricalDataJob } from './jobs/historical-data.ts';
 import { sendDataJob } from './jobs/send-data.ts';
+
+const EVERY_HOUR_WITH_3_MINUTES_OFFSET = '0 3 * * * *';
+const THE_START_OF_EVERY_MONTHS = '0 0 0 1 * *';
 
 const {
   SRC_URI,
@@ -41,10 +45,18 @@ if (!NODE_PORT) {
 const PORT = Number(NODE_PORT) || 5000;
 
 CronJob.from({
-  cronTime: '0 0 * * * *',
+  cronTime: EVERY_HOUR_WITH_3_MINUTES_OFFSET,
   onTick: sendDataJob,
   start: true,
 });
+
+CronJob.from({
+  cronTime: THE_START_OF_EVERY_MONTHS,
+  onTick: sendHistoricalDataJob,
+  start: true,
+});
+
+await sendHistoricalData(2);
 
 http
   .createServer(app)
