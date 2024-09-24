@@ -47,11 +47,15 @@ export async function sendHistoricalData(months: number) {
       return;
     }
 
-    console.log('Fetched historical data:', missingData);
+    console.log('Fetched historical data:');
 
-    missingData.map((data) => format(data, destId, data.timestamp)).forEach(sendData);
+    const formattedData = missingData.map((data) => format(data, destId, data.timestamp));
 
-    console.log(`Historical data sent from ${startDate} to ${endDate}`);
+    for (const data of formattedData) {
+      await sendData(data);
+    }
+
+    console.log(`Historical data sent from ${startDate.toISOString()} to ${endDate.toISOString()}`);
   }
 }
 
@@ -107,6 +111,8 @@ async function fetchHistoricalData(
 }
 
 async function sendData(data: DestinationBody) {
+  console.log('Sending historical data:', data);
+
   const serverResponse = await destFetcher()
     .post('/AQI/SendData', data)
     .catch((error) => {
