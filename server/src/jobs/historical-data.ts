@@ -56,7 +56,7 @@ export async function sendHistoricalData(months: number) {
 }
 
 async function fetchMissingData(id: string) {
-  const uri = '/AQI/GetMissingDates=stationId=' + id;
+  const uri = '/AQI/GetMissingDates?stationId=' + id;
 
   console.log('Fetching missing data from DESTINATION:', uri);
 
