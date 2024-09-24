@@ -63,6 +63,7 @@ async function fetchMissingData(id: string) {
         '\nResponse: ' +
         response.statusText
     );
+    console.error('Response:', await response.json());
     return;
   }
 
