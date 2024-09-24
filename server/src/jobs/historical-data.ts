@@ -23,6 +23,8 @@ export async function sendHistoricalData(months: number) {
   for (const sourceId of Object.keys(records)) {
     const destId = records[sourceId];
 
+    console.log('Sending historical data from', sourceId, 'to', destId);
+
     const { endDateString } = (await fetchMissingData(destId)) ?? { endDateString: undefined };
 
     if (!endDateString) {
@@ -43,7 +45,11 @@ export async function sendHistoricalData(months: number) {
       return;
     }
 
+    console.log('Fetched historical data:', missingData);
+
     missingData.map((data) => format(data, destId, data.timestamp)).forEach(sendData);
+
+    console.log(`Historical data sent from ${startDate} to ${endDate}`);
   }
 }
 
