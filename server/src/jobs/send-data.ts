@@ -1,5 +1,5 @@
 import * as dataHandler from '@/handlers/data-handler.ts';
-import { getAll } from '@/handlers/record-handler.ts';
+import { getAll, getTargetIdBySourceId } from '@/handlers/record-handler.ts';
 import { destFetcher } from '@/helpers/fetch.ts';
 
 export async function sendDataJob() {
@@ -17,8 +17,15 @@ export async function sendDataJob() {
       console.info(`No data found for the source id: ${srcId}`);
       continue;
     }
+    
+    const destId = getTargetIdBySourceId(srcId);
 
-    const formatted = dataHandler.format(data, records[srcId]);
+    if (!destId) {
+      console.error(`No destination found for the source id: ${srcId}`);
+      continue;
+    }
+
+    const formatted = dataHandler.format(data, destId);
 
     console.log('Formatted notification:', formatted);
 

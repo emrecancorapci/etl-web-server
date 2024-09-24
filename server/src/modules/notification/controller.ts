@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
 import * as dataHandler from '@/handlers/data-handler.ts';
-import { isTargetIdExist } from '@/handlers/record-handler.ts';
+import { isSourceIdExist } from '@/handlers/record-handler.ts';
 import { InternalServerError } from '@/middlewares/error/base.ts';
 import type { Notification } from '@/types.ts';
 
@@ -30,7 +30,7 @@ export async function post(
 
   console.log('Notification received:', notification);
 
-  if (!isTargetIdExist(id)) {
+  if (!isSourceIdExist(id)) {
     console.log('No record found for this id');
     throw new InternalServerError('No record found for this id');
   }

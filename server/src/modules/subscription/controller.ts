@@ -24,6 +24,10 @@ export async function getAll(_: Request, response: Response) {
   const rawResponse = await srcFetcher().get('/orion/v2/subscriptions');
 
   if (!rawResponse.ok) {
+    if (rawResponse.status === 429) {
+      throw new InternalServerError('Too many requests to SOURCE. Please try again later.');
+    }
+    
     const error = (await rawResponse.json()) as SourceErrorResponse;
 
     throw new InternalServerError(error.description);

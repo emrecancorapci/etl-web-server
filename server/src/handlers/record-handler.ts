@@ -118,3 +118,7 @@ export function getSourceId(id: string): string | undefined {
 export function getTargetId(id: string): string | undefined {
   return getBySourceId(id)?.[id];
 }
+
+export function getTargetIdBySourceId(id: string): string | undefined {
+  return getBySourceId(id)?.[id];
+}
