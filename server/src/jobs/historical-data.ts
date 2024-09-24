@@ -28,7 +28,9 @@ export async function sendHistoricalData(months: number) {
     const { endDateString } = (await fetchMissingData(destId)) ?? { endDateString: undefined };
 
     if (!endDateString) {
-      console.error('Error while fetching missing dates data from DESTINATION. Taking current date.');
+      console.error(
+        'Error while fetching missing dates data from DESTINATION. Taking current date.'
+      );
     }
 
     const now = new Date();
@@ -54,7 +56,11 @@ export async function sendHistoricalData(months: number) {
 }
 
 async function fetchMissingData(id: string) {
-  const response: Response = await destFetcher().get('/AQI/GetMissingDates=stationId=' + id);
+  const uri = '/AQI/GetMissingDates=stationId=' + id;
+
+  console.log('Fetching missing data from DESTINATION:', uri);
+
+  const response: Response = await destFetcher().get(uri);
 
   if (!response.ok) {
     console.error(
@@ -85,6 +91,10 @@ async function fetchHistoricalData(
     interval: '60',
     groupType: 'avg',
   });
+
+  const uri = '/historical/' + id + '?' + params.toString();
+
+  console.log('Fetching historical data from SOURCE:', uri);
 
   const response = await srcFetcher().get('/historical/' + id + '?' + params.toString());
 
