@@ -26,12 +26,14 @@ export async function sendHistoricalData(months: number) {
     const { endDateString } = (await fetchMissingData(destId)) ?? { endDateString: undefined };
 
     if (!endDateString) {
-      console.error('Error while fetching missing dates data from DESTINATION');
-      return;
+      console.error('Error while fetching missing dates data from DESTINATION. Taking current date.');
     }
 
-    const endDate = new Date(endDateString);
-    endDate.setMinutes(1,0,0);
+    const now = new Date();
+    now.setHours(now.getHours() + 3);
+
+    const endDate = new Date(endDateString ?? now);
+    endDate.setMinutes(1, 0, 0);
     const startDate = new Date(endDate.getTime() - months * ONE_MONTH);
 
     const missingData = await fetchHistoricalData(sourceId, startDate, endDate);
